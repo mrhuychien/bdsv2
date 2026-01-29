@@ -2422,12 +2422,13 @@ const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
 
 const ContentScreen = ({ onNavigate }) => {
   const { user } = useAuth();
-  const [contents, setContents] = useState([]);
   const [properties, setProperties] = useState([]);
+  const [scheduledCount, setScheduledCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      // Fetch properties
       const { data: props } = await supabase
         .from('properties')
         .select('*')
@@ -2435,6 +2436,15 @@ const ContentScreen = ({ onNavigate }) => {
         .eq('status', 'dang-ban')
         .limit(5);
       setProperties(props || []);
+
+      // Fetch scheduled posts count
+      const { count } = await supabase
+        .from('scheduled_posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'scheduled');
+      setScheduledCount(count || 0);
+
       setLoading(false);
     };
     fetchData();
@@ -2452,9 +2462,30 @@ const ContentScreen = ({ onNavigate }) => {
     <div className="min-h-screen bg-slate-900 pb-20">
       <Header title="📱 Content Factory" />
       <div className="p-4">
+        {/* Scheduled Posts Banner */}
+        {scheduledCount > 0 && (
+          <Card
+            className="mb-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500/30"
+            onClick={() => onNavigate('scheduled-posts')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-500/30 rounded-full flex items-center justify-center">
+                  <span className="text-xl">📅</span>
+                </div>
+                <div>
+                  <p className="text-white font-medium">{scheduledCount} bài chờ đăng</p>
+                  <p className="text-slate-400 text-sm">Xem lịch đăng bài</p>
+                </div>
+              </div>
+              <span className="text-slate-400">→</span>
+            </div>
+          </Card>
+        )}
+
         {/* Quick Actions */}
         <h3 className="text-lg font-semibold text-white mb-3">Tạo content nhanh</h3>
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-4">
           {PLATFORMS.map(p => (
             <Card key={p.id} className="text-center py-4" onClick={() => onNavigate('create-content', { platform: p.id })}>
               <div className="text-2xl mb-1">{p.icon}</div>
@@ -2462,6 +2493,17 @@ const ContentScreen = ({ onNavigate }) => {
             </Card>
           ))}
         </div>
+
+        {/* View Scheduled Button */}
+        <Card
+          className="mb-6 text-center py-3"
+          onClick={() => onNavigate('scheduled-posts')}
+        >
+          <div className="flex items-center justify-center gap-2 text-slate-300">
+            <span>📅</span>
+            <span>Xem lịch đăng bài</span>
+          </div>
+        </Card>
 
         {/* Recent Properties */}
         <h3 className="text-lg font-semibold text-white mb-3">BĐS có thể tạo content</h3>
@@ -2506,6 +2548,54 @@ const CreateContentScreen = ({ onBack, params }) => {
   const [generatedContent, setGeneratedContent] = useState('');
   const [generating, setGenerating] = useState(false);
   const [toast, setToast] = useState(null);
+
+  // Scheduling states
+  const [selectedPlatforms, setSelectedPlatforms] = useState(null);
+  const [scheduleTime, setScheduleTime] = useState('');
+  const [scheduling, setScheduling] = useState(false);
+
+  // Initialize schedule time to next golden hour
+  useEffect(() => {
+    if (!scheduleTime) {
+      const now = new Date();
+      now.setHours(now.getHours() + 1, 0, 0, 0);
+      setScheduleTime(now.toISOString().slice(0, 16));
+    }
+  }, [scheduleTime]);
+
+  // Initialize selected platforms when platform changes
+  useEffect(() => {
+    if (platform && !selectedPlatforms) {
+      setSelectedPlatforms([platform]);
+    }
+  }, [platform, selectedPlatforms]);
+
+  const handleSchedulePost = async () => {
+    if (!generatedContent || !scheduleTime || (selectedPlatforms || []).length === 0) {
+      setToast({ message: 'Vui lòng chọn nền tảng và thời gian', type: 'error' });
+      return;
+    }
+    setScheduling(true);
+    try {
+      const { error } = await supabase.from('scheduled_posts').insert({
+        user_id: user.id,
+        property_id: selectedProperty?.id || null,
+        content: generatedContent,
+        media_urls: selectedProperty?.images || [],
+        platforms: selectedPlatforms || [platform],
+        scheduled_at: new Date(scheduleTime).toISOString(),
+        status: 'scheduled',
+      });
+      if (error) throw error;
+      setToast({ message: 'Đã lên lịch đăng bài thành công!', type: 'success' });
+      setTimeout(() => onBack(), 1500);
+    } catch (error) {
+      console.error('Schedule error:', error);
+      setToast({ message: 'Có lỗi xảy ra khi lên lịch', type: 'error' });
+    } finally {
+      setScheduling(false);
+    }
+  };
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -2673,32 +2763,300 @@ const CreateContentScreen = ({ onBack, params }) => {
                 value={generatedContent}
                 onChange={(e) => setGeneratedContent(e.target.value)}
                 className="w-full bg-transparent text-white text-sm resize-none focus:outline-none"
-                rows={12}
+                rows={10}
               />
             </Card>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 mb-4">
               <Button variant="secondary" onClick={copyToClipboard}>
                 📋 Copy
               </Button>
-              <Button onClick={() => { setStep(2); setGeneratedContent(''); }}>
+              <Button variant="secondary" onClick={() => { setStep(2); setGeneratedContent(''); }}>
                 🔄 Tạo lại
               </Button>
             </div>
 
-            <Card className="mt-4 text-center py-4">
-              <p className="text-slate-400 text-sm mb-2">Giờ vàng đăng bài</p>
-              <div className="flex justify-center gap-2 flex-wrap">
-                {GOLDEN_HOURS.map(h => (
-                  <span key={h.time} className="bg-slate-700 px-3 py-1 rounded-full text-xs text-white">
-                    {h.label}
-                  </span>
+            {/* Schedule Section */}
+            <Card className="mb-4">
+              <h3 className="text-white font-semibold mb-3">📅 Lên lịch đăng bài</h3>
+
+              <p className="text-slate-400 text-sm mb-3">Chọn nền tảng muốn đăng:</p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {PLATFORMS.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      const current = selectedPlatforms || [platform];
+                      if (current.includes(p.id)) {
+                        setSelectedPlatforms(current.filter(x => x !== p.id));
+                      } else {
+                        setSelectedPlatforms([...current, p.id]);
+                      }
+                    }}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition ${
+                      (selectedPlatforms || [platform]).includes(p.id)
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-slate-700 text-slate-300'
+                    }`}
+                  >
+                    {p.icon} {p.name}
+                  </button>
                 ))}
               </div>
+
+              <p className="text-slate-400 text-sm mb-2">Thời gian đăng:</p>
+              <input
+                type="datetime-local"
+                value={scheduleTime}
+                onChange={(e) => setScheduleTime(e.target.value)}
+                min={new Date().toISOString().slice(0, 16)}
+                className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white mb-3"
+              />
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                {GOLDEN_HOURS.map(h => {
+                  const today = new Date();
+                  const [hours, minutes] = h.time.split(':');
+                  today.setHours(parseInt(hours), parseInt(minutes), 0);
+                  if (today < new Date()) today.setDate(today.getDate() + 1);
+                  const dateStr = today.toISOString().slice(0, 16);
+                  return (
+                    <button
+                      key={h.time}
+                      onClick={() => setScheduleTime(dateStr)}
+                      className="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-full text-xs text-white transition"
+                    >
+                      {h.label}
+                    </button>
+                  );
+                })}
+              </div>
             </Card>
+
+            <Button onClick={handleSchedulePost} loading={scheduling} className="w-full mb-3">
+              📅 Lên lịch đăng bài
+            </Button>
+
+            <Button variant="ghost" onClick={() => setStep(1)} className="w-full">
+              ← Tạo content khác
+            </Button>
           </>
         )}
       </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         SCHEDULED POSTS SCREEN
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const ScheduledPostsScreen = ({ onBack, onNavigate }) => {
+  const { user } = useAuth();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all'); // all, scheduled, published, failed
+  const [toast, setToast] = useState(null);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      let query = supabase
+        .from('scheduled_posts')
+        .select('*, properties(title, images)')
+        .eq('user_id', user.id)
+        .order('scheduled_at', { ascending: true });
+
+      if (filter !== 'all') {
+        query = query.eq('status', filter);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      setPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setToast({ message: 'Không thể tải dữ liệu', type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [user, filter]);
+
+  const handleDelete = async (id) => {
+    if (!confirm('Bạn có chắc muốn xóa bài đăng này?')) return;
+    try {
+      const { error } = await supabase.from('scheduled_posts').delete().eq('id', id);
+      if (error) throw error;
+      setPosts(posts.filter(p => p.id !== id));
+      setToast({ message: 'Đã xóa bài đăng', type: 'success' });
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    const styles = {
+      'scheduled': { bg: 'bg-blue-500/20', text: 'text-blue-400', label: 'Chờ đăng' },
+      'publishing': { bg: 'bg-amber-500/20', text: 'text-amber-400', label: 'Đang đăng' },
+      'published': { bg: 'bg-green-500/20', text: 'text-green-400', label: 'Đã đăng' },
+      'partial': { bg: 'bg-yellow-500/20', text: 'text-yellow-400', label: 'Đăng một phần' },
+      'failed': { bg: 'bg-red-500/20', text: 'text-red-400', label: 'Lỗi' },
+      'draft': { bg: 'bg-slate-500/20', text: 'text-slate-400', label: 'Nháp' },
+    };
+    const style = styles[status] || styles['scheduled'];
+    return (
+      <span className={`${style.bg} ${style.text} px-2 py-0.5 rounded text-xs`}>
+        {style.label}
+      </span>
+    );
+  };
+
+  const formatScheduleTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const isToday = date.toDateString() === today.toDateString();
+    const isTomorrow = date.toDateString() === tomorrow.toDateString();
+
+    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+    if (isToday) return `Hôm nay, ${time}`;
+    if (isTomorrow) return `Ngày mai, ${time}`;
+    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) + `, ${time}`;
+  };
+
+  const filters = [
+    { id: 'all', label: 'Tất cả' },
+    { id: 'scheduled', label: 'Chờ đăng' },
+    { id: 'published', label: 'Đã đăng' },
+    { id: 'failed', label: 'Lỗi' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="📅 Lịch đăng bài" onBack={onBack} showProfile={false} />
+
+      <div className="p-4">
+        {/* Filter tabs */}
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          {filters.map(f => (
+            <button
+              key={f.id}
+              onClick={() => setFilter(f.id)}
+              className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition ${
+                filter === f.id
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <LoadingSpinner size="lg" />
+          </div>
+        ) : posts.length === 0 ? (
+          <Card className="text-center py-8">
+            <div className="text-4xl mb-3">📅</div>
+            <p className="text-slate-400 mb-4">Chưa có bài đăng nào được lên lịch</p>
+            <Button onClick={() => onNavigate('create-content')}>
+              ✨ Tạo content mới
+            </Button>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {posts.map(post => (
+              <Card key={post.id} className="p-4">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {(post.platforms || []).map(pid => {
+                      const p = PLATFORMS.find(x => x.id === pid);
+                      return p ? <span key={pid} title={p.name}>{p.icon}</span> : null;
+                    })}
+                    {getStatusBadge(post.status)}
+                  </div>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    className="text-slate-500 hover:text-red-400 transition"
+                  >
+                    🗑️
+                  </button>
+                </div>
+
+                {/* Content preview */}
+                <p className="text-white text-sm line-clamp-2 mb-3">
+                  {post.content}
+                </p>
+
+                {/* Property info if linked */}
+                {post.properties && (
+                  <div className="flex items-center gap-2 mb-3 bg-slate-700/50 p-2 rounded-lg">
+                    {post.properties.images?.[0] ? (
+                      <img
+                        src={post.properties.images[0]}
+                        alt={post.properties.title || 'Hình BĐS'}
+                        className="w-10 h-10 rounded object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-slate-600 rounded flex items-center justify-center">🏠</div>
+                    )}
+                    <span className="text-slate-300 text-sm line-clamp-1">{post.properties.title}</span>
+                  </div>
+                )}
+
+                {/* Schedule time */}
+                <div className="flex items-center gap-2 text-slate-400 text-sm">
+                  <span>🕐</span>
+                  <span>{formatScheduleTime(post.scheduled_at)}</span>
+                </div>
+
+                {/* Error message if failed */}
+                {post.status === 'failed' && post.error_message && (
+                  <div className="mt-2 bg-red-500/10 border border-red-500/30 rounded p-2">
+                    <p className="text-red-400 text-xs">{post.error_message}</p>
+                  </div>
+                )}
+
+                {/* Platform results if partial/published */}
+                {(post.status === 'partial' || post.status === 'published') && post.platform_results && (
+                  <div className="mt-2 space-y-1">
+                    {Object.entries(post.platform_results).map(([pid, result]) => (
+                      <div key={pid} className="flex items-center gap-2 text-xs">
+                        <span>{PLATFORMS.find(p => p.id === pid)?.icon}</span>
+                        <span className={result.status === 'published' ? 'text-green-400' : 'text-red-400'}>
+                          {result.status === 'published' ? '✓ Đã đăng' : `✗ ${result.error || 'Lỗi'}`}
+                        </span>
+                        {result.url && (
+                          <a
+                            href={result.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline"
+                          >
+                            Xem bài
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
@@ -3852,6 +4210,9 @@ const AppContent = () => {
     // Phase 3: Content screens
     if (screen.name === 'create-content') {
       return <CreateContentScreen onBack={goBack} params={screen.params} />;
+    }
+    if (screen.name === 'scheduled-posts') {
+      return <ScheduledPostsScreen onBack={goBack} onNavigate={navigate} />;
     }
 
     // Phase 4: Agent Profile screens
