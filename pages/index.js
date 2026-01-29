@@ -6,6 +6,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import React, { useState, useEffect, useContext, createContext, useCallback } from 'react';
+import Head from 'next/head';
 import { createClient } from '@supabase/supabase-js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -561,7 +562,7 @@ const ImageUploader = ({ images = [], onChange, userId }) => {
       <div className="flex flex-wrap gap-3">
         {images.map((url, index) => (
           <div key={index} className="relative w-20 h-20 rounded-xl overflow-hidden group">
-            <img src={url} alt="" className="w-full h-full object-cover" />
+            <img src={url} alt={`Hình ảnh BĐS ${index + 1}`} className="w-full h-full object-cover" />
             <button
               type="button"
               onClick={() => removeImage(index)}
@@ -2161,7 +2162,7 @@ const LandingPagesListScreen = ({ onNavigate, onBack }) => {
             <Card key={lp.id} className="mb-3" onClick={() => onNavigate('landing-page-detail', lp.id)}>
               <div className="flex gap-3">
                 {lp.property?.images?.[0] ? (
-                  <img src={lp.property.images[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                  <img src={lp.property.images[0]} alt={lp.property.title || 'Hình BĐS'} className="w-16 h-16 rounded-lg object-cover" />
                 ) : (
                   <div className="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
                 )}
@@ -2277,7 +2278,7 @@ const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
                 <Card key={p.id} className="mb-3" onClick={() => handleSelectProperty(p)}>
                   <div className="flex gap-3">
                     {p.images?.[0] ? (
-                      <img src={p.images[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                      <img src={p.images[0]} alt={p.title || 'Hình BĐS'} className="w-16 h-16 rounded-lg object-cover" />
                     ) : (
                       <div className="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
                     )}
@@ -2437,7 +2438,7 @@ const ContentScreen = ({ onNavigate }) => {
             <Card key={p.id} className="mb-3" onClick={() => onNavigate('create-content', { propertyId: p.id })}>
               <div className="flex gap-3">
                 {p.images?.[0] ? (
-                  <img src={p.images[0]} alt="" className="w-14 h-14 rounded-lg object-cover" />
+                  <img src={p.images[0]} alt={p.title || 'Hình BĐS'} className="w-14 h-14 rounded-lg object-cover" />
                 ) : (
                   <div className="w-14 h-14 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
                 )}
@@ -2572,7 +2573,7 @@ const CreateContentScreen = ({ onBack, params }) => {
               >
                 <div className="flex gap-3 items-center">
                   <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center overflow-hidden">
-                    {p.images?.[0] ? <img src={p.images[0]} alt="" className="w-full h-full object-cover" /> : '🏠'}
+                    {p.images?.[0] ? <img src={p.images[0]} alt={p.title || 'Hình BĐS'} className="w-full h-full object-cover" /> : '🏠'}
                   </div>
                   <div className="flex-1">
                     <p className="text-white font-medium line-clamp-1">{p.title}</p>
@@ -3878,10 +3879,36 @@ const AppContent = () => {
 
 export default function Home() {
   return (
-    <AuthProvider>
-      <div className="font-sans antialiased">
-        <AppContent />
-      </div>
-    </AuthProvider>
+    <>
+      <Head>
+        <title>PostNhà - Nền tảng BĐS cho Môi giới</title>
+        <meta name="description" content="PostNhà - Nền tảng quản lý bất động sản toàn diện cho môi giới. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="theme-color" content="#0F172A" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://batdongsan.digital/" />
+        <meta property="og:title" content="PostNhà - Nền tảng BĐS cho Môi giới" />
+        <meta property="og:description" content="Nền tảng quản lý bất động sản toàn diện. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
+        <meta property="og:image" content="https://batdongsan.digital/og-image.png" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="PostNhà - Nền tảng BĐS cho Môi giới" />
+        <meta name="twitter:description" content="Nền tảng quản lý bất động sản toàn diện cho môi giới chuyên nghiệp." />
+
+        {/* Favicon */}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+      </Head>
+      <AuthProvider>
+        <div className="font-sans antialiased">
+          <AppContent />
+        </div>
+      </AuthProvider>
+    </>
   );
 }
