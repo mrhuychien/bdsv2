@@ -3217,39 +3217,29 @@ const SocialAccountsScreen = ({ onBack }) => {
 
   useEffect(() => {
     fetchAccounts();
+
+    // Check for OAuth callback results in URL
+    const params = new URLSearchParams(window.location.search);
+    const socialSuccess = params.get('social_success');
+    const socialError = params.get('social_error');
+
+    if (socialSuccess) {
+      const platformName = SOCIAL_PLATFORMS.find(p => p.id === socialSuccess)?.name || socialSuccess;
+      setToast({ message: `Đã kết nối ${platformName} thành công!`, type: 'success' });
+      // Clear URL params
+      window.history.replaceState({}, '', window.location.pathname);
+      // Refresh accounts
+      fetchAccounts();
+    } else if (socialError) {
+      setToast({ message: `Lỗi kết nối: ${socialError}`, type: 'error' });
+      window.history.replaceState({}, '', window.location.pathname);
+    }
   }, [user]);
 
-  const handleConnect = async (platform) => {
+  const handleConnect = (platform) => {
     setConnecting(platform.id);
-
-    // In production, this would redirect to OAuth flow
-    // For demo, we simulate a successful connection
-    setToast({
-      message: `Tính năng kết nối ${platform.name} đang được phát triển. Vui lòng liên hệ admin để được hỗ trợ.`,
-      type: 'info'
-    });
-
-    // Simulate adding account for demo purposes
-    setTimeout(async () => {
-      try {
-        const { error } = await supabase.from('social_accounts').insert({
-          user_id: user.id,
-          platform: platform.id,
-          platform_user_id: `demo_${Date.now()}`,
-          platform_username: `Demo ${platform.name} Account`,
-          access_token: 'demo_token',
-          token_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          is_active: true,
-        });
-        if (!error) {
-          await fetchAccounts();
-          setToast({ message: `Đã kết nối ${platform.name} (Demo)`, type: 'success' });
-        }
-      } catch (e) {
-        console.error(e);
-      }
-      setConnecting(null);
-    }, 1500);
+    // Redirect to OAuth API route
+    window.location.href = `/api/auth/${platform.id}?user_id=${user.id}`;
   };
 
   const handleDisconnect = async (accountId, platformName) => {
@@ -3268,8 +3258,38 @@ const SocialAccountsScreen = ({ onBack }) => {
     }
   };
 
+  const handleRefreshToken = async (accountId, platformName) => {
+    try {
+      const response = await fetch('/api/auth/refresh-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: accountId }),
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      setToast({ message: `Đã làm mới token ${platformName}`, type: 'success' });
+      fetchAccounts();
+    } catch (error) {
+      setToast({ message: `Lỗi: ${error.message}`, type: 'error' });
+    }
+  };
+
   const getConnectedAccount = (platformId) => {
     return accounts.find(a => a.platform === platformId && a.is_active);
+  };
+
+  const isTokenExpiringSoon = (expiresAt) => {
+    if (!expiresAt) return false;
+    const expiry = new Date(expiresAt);
+    const now = new Date();
+    const daysUntilExpiry = (expiry - now) / (1000 * 60 * 60 * 24);
+    return daysUntilExpiry < 7;
+  };
+
+  const formatExpiryDate = (expiresAt) => {
+    if (!expiresAt) return 'Không xác định';
+    const date = new Date(expiresAt);
+    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
   return (
@@ -3332,16 +3352,43 @@ const SocialAccountsScreen = ({ onBack }) => {
                       <p className="text-slate-400 text-sm mb-2">{platform.description}</p>
 
                       {connected ? (
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-300 text-sm">
-                            {connected.platform_username}
-                          </span>
-                          <button
-                            onClick={() => handleDisconnect(connected.id, platform.name)}
-                            className="text-red-400 text-sm hover:underline"
-                          >
-                            Ngắt kết nối
-                          </button>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-slate-300 text-sm">
+                              {connected.platform_username}
+                            </span>
+                          </div>
+
+                          {/* Token expiry info */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`text-xs ${isTokenExpiringSoon(connected.token_expires_at) ? 'text-amber-400' : 'text-slate-500'}`}>
+                              {isTokenExpiringSoon(connected.token_expires_at) ? '⚠️' : '🔑'} Token hết hạn: {formatExpiryDate(connected.token_expires_at)}
+                            </span>
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="flex gap-2">
+                            {isTokenExpiringSoon(connected.token_expires_at) && (
+                              <button
+                                onClick={() => handleRefreshToken(connected.id, platform.name)}
+                                className="text-amber-400 text-xs bg-amber-500/10 px-2 py-1 rounded hover:bg-amber-500/20"
+                              >
+                                🔄 Làm mới token
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleConnect(platform)}
+                              className="text-blue-400 text-xs bg-blue-500/10 px-2 py-1 rounded hover:bg-blue-500/20"
+                            >
+                              🔗 Kết nối lại
+                            </button>
+                            <button
+                              onClick={() => handleDisconnect(connected.id, platform.name)}
+                              className="text-red-400 text-xs bg-red-500/10 px-2 py-1 rounded hover:bg-red-500/20"
+                            >
+                              ✗ Ngắt kết nối
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <Button
@@ -3350,7 +3397,7 @@ const SocialAccountsScreen = ({ onBack }) => {
                           loading={isConnecting}
                           className="mt-1"
                         >
-                          Kết nối {platform.name}
+                          🔗 Kết nối {platform.name}
                         </Button>
                       )}
                     </div>
