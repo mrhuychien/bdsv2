@@ -1,7 +1,7 @@
 {
-  "name": "postnha-platform",
+  "name": "batdongsan-digital",
   "version": "2.5.0",
-  "description": "PostNhà Platform - Nền tảng BĐS cho môi giới",
+  "description": "Batdongsan.Digital - Nền tảng BĐS cho môi giới",
   "private": true,
   "scripts": {
     "dev": "next dev",

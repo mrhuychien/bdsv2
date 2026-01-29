@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-//                           POSTNHÀ PLATFORM v2.1
-//                        Phase 1: Foundation + Kho Hàng
+//                           BATDONGSAN.DIGITAL v2.5
+//                        Nền tảng BĐS cho Môi giới
 //                           Vibecode Kit v4.0
 //                      Tác giả: Nguyễn Huy Chiến (1nguoi.com)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -948,7 +948,7 @@ const LoginScreen = ({ onNavigate }) => {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="text-5xl mb-4">🏠</div>
-          <h1 className="text-3xl font-bold text-white">PostNhà</h1>
+          <h1 className="text-3xl font-bold text-white">Batdongsan.Digital</h1>
           <p className="text-slate-400 mt-2">Nền tảng BĐS cho môi giới</p>
         </div>
 
@@ -1102,7 +1102,7 @@ const RegisterScreen = ({ onNavigate }) => {
       <div className="max-w-sm mx-auto w-full">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-white">Tạo tài khoản</h1>
-          <p className="text-slate-400 mt-2">Bắt đầu miễn phí với PostNhà</p>
+          <p className="text-slate-400 mt-2">Bắt đầu miễn phí với Batdongsan.Digital</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -2045,7 +2045,7 @@ const HomeScreen = ({ onNavigate }) => {
             Xin chào, {profile?.full_name || 'Môi giới'}! 👋
           </h2>
           <p className="text-slate-400">
-            Chào mừng đến với PostNhà Platform v2.5
+            Chào mừng đến với Batdongsan.Digital
           </p>
         </Card>
 
@@ -2091,7 +2091,7 @@ const HomeScreen = ({ onNavigate }) => {
             <div className="flex-1">
               <p className="text-white font-medium">Trang cá nhân</p>
               <p className="text-slate-400 text-sm">
-                {profile?.agent_page_slug ? `postnha.vn/agent/${profile.agent_page_slug}` : 'Tạo trang giới thiệu của bạn'}
+                {profile?.agent_page_slug ? `batdongsan.digital/agent/${profile.agent_page_slug}` : 'Tạo trang giới thiệu của bạn'}
               </p>
             </div>
             <span className="text-slate-500">→</span>
@@ -2921,7 +2921,7 @@ const AgentPageBuilderScreen = ({ onBack }) => {
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`postnha.vn/agent/${slug}`);
+    navigator.clipboard.writeText(`batdongsan.digital/agent/${slug}`);
     setToast({ message: 'Đã copy link!', type: 'success' });
   };
 
@@ -2951,7 +2951,7 @@ const AgentPageBuilderScreen = ({ onBack }) => {
         {/* Slug */}
         <h3 className="text-lg font-semibold text-white mb-3">🔗 Đường dẫn</h3>
         <div className="flex items-center bg-slate-800 border border-slate-600 rounded-xl overflow-hidden mb-2">
-          <span className="px-3 text-slate-500 text-sm">postnha.vn/agent/</span>
+          <span className="px-3 text-slate-500 text-sm">batdongsan.digital/agent/</span>
           <input
             type="text"
             value={slug}
@@ -2983,7 +2983,7 @@ const AgentPageBuilderScreen = ({ onBack }) => {
           <>
             <Card className="mb-4 text-center py-4 bg-green-900/30 border-green-500">
               <p className="text-green-400 font-medium">✅ Trang đã được xuất bản</p>
-              <p className="text-slate-400 text-sm mt-1">postnha.vn/agent/{slug}</p>
+              <p className="text-slate-400 text-sm mt-1">batdongsan.digital/agent/{slug}</p>
             </Card>
             <div className="grid grid-cols-2 gap-3">
               <Button variant="secondary" onClick={copyLink}>📋 Copy link</Button>
@@ -3921,8 +3921,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>PostNhà - Nền tảng BĐS cho Môi giới</title>
-        <meta name="description" content="PostNhà - Nền tảng quản lý bất động sản toàn diện cho môi giới. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
+        <title>Batdongsan.Digital - Nền tảng BĐS cho Môi giới</title>
+        <meta name="description" content="Batdongsan.Digital - Nền tảng quản lý bất động sản toàn diện cho môi giới. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#0F172A" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -3930,7 +3930,7 @@ export default function Home() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://batdongsan.digital/" />
-        <meta property="og:title" content="PostNhà - Nền tảng BĐS cho Môi giới" />
+        <meta property="og:title" content="Batdongsan.Digital - Nền tảng BĐS cho Môi giới" />
         <meta property="og:description" content="Nền tảng quản lý bất động sản toàn diện. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
 
         {/* Favicon */}
