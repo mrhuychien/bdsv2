@@ -1595,6 +1595,37 @@ const PropertyDetailScreen = ({ propertyId, onNavigate, onBack }) => {
           </div>
         </Card>
 
+        {/* Landing Page URL */}
+        {property.landing_page_url && (
+          <Card className="mb-4 border-amber-500/30">
+            <h3 className="text-lg font-semibold text-white mb-3">🔗 Landing Page</h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={property.landing_page_url}
+                readOnly
+                className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-amber-400 text-sm"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(property.landing_page_url);
+                }}
+              >
+                📋
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => window.open(property.landing_page_url, '_blank')}
+              >
+                🔗
+              </Button>
+            </div>
+          </Card>
+        )}
+
         {/* Action Buttons */}
         <div className="flex gap-3">
           <Button
@@ -2237,6 +2268,7 @@ const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
     if (!selectedProperty || !formData.slug) return;
     setSaving(true);
     try {
+      // Tạo landing page
       const { error } = await supabase.from('landing_pages').insert({
         user_id: user.id,
         property_id: selectedProperty.id,
@@ -2248,6 +2280,14 @@ const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
         custom_cta_phone: formData.custom_cta_phone,
       });
       if (error) throw error;
+
+      // Lưu link landing page vào property
+      const landingPageUrl = `https://batdongsan.digital/p/${formData.slug}`;
+      await supabase
+        .from('properties')
+        .update({ landing_page_url: landingPageUrl })
+        .eq('id', selectedProperty.id);
+
       setToast({ message: 'Tạo Landing Page thành công!', type: 'success' });
       setTimeout(() => onBack(), 1500);
     } catch (error) {
@@ -2352,7 +2392,7 @@ const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
             <div className="mb-4">
               <label className="block text-slate-300 text-sm font-medium mb-2">Đường dẫn</label>
               <div className="flex items-center bg-slate-800 border border-slate-600 rounded-xl overflow-hidden">
-                <span className="px-3 text-slate-500 text-sm">postnha.vn/p/</span>
+                <span className="px-3 text-slate-500 text-sm">batdongsan.digital/p/</span>
                 <input
                   type="text"
                   value={formData.slug}
