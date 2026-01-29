@@ -253,7 +253,7 @@ const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined
+        redirectTo: 'https://batdongsan.digital'
       }
     });
     return { data, error };
