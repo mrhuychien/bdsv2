@@ -10,10 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@postiz/node": "^1.0.8",
+    "@supabase/supabase-js": "^2.43.4",
     "next": "14.2.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@supabase/supabase-js": "^2.43.4"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",

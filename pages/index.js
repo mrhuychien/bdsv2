@@ -3166,6 +3166,7 @@ const ScheduledPostsScreen = ({ onBack, onNavigate }) => {
 //                         SOCIAL ACCOUNTS SCREEN
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// Platforms supported via Postiz integration
 const SOCIAL_PLATFORMS = [
   {
     id: 'facebook',
@@ -3173,15 +3174,15 @@ const SOCIAL_PLATFORMS = [
     icon: '📘',
     color: '#1877F2',
     description: 'Đăng bài lên Facebook Page hoặc Profile',
-    authUrl: 'https://www.facebook.com/v18.0/dialog/oauth',
+    postizSupported: true,
   },
   {
-    id: 'zalo',
-    name: 'Zalo OA',
-    icon: '💬',
-    color: '#0068FF',
-    description: 'Đăng bài lên Zalo Official Account',
-    authUrl: 'https://oauth.zaloapp.com/v4/oa/permission',
+    id: 'instagram',
+    name: 'Instagram',
+    icon: '📸',
+    color: '#E4405F',
+    description: 'Đăng ảnh và Reels lên Instagram',
+    postizSupported: true,
   },
   {
     id: 'tiktok',
@@ -3189,25 +3190,79 @@ const SOCIAL_PLATFORMS = [
     icon: '🎵',
     color: '#000000',
     description: 'Đăng video lên TikTok',
-    authUrl: 'https://www.tiktok.com/auth/authorize/',
+    postizSupported: true,
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    icon: '▶️',
+    color: '#FF0000',
+    description: 'Đăng video lên YouTube',
+    postizSupported: true,
+  },
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    icon: '💼',
+    color: '#0A66C2',
+    description: 'Đăng bài lên LinkedIn',
+    postizSupported: true,
+  },
+  {
+    id: 'x',
+    name: 'X (Twitter)',
+    icon: '𝕏',
+    color: '#000000',
+    description: 'Đăng tweet lên X',
+    postizSupported: true,
+  },
+  {
+    id: 'threads',
+    name: 'Threads',
+    icon: '🧵',
+    color: '#000000',
+    description: 'Đăng bài lên Threads',
+    postizSupported: true,
+  },
+  {
+    id: 'zalo',
+    name: 'Zalo OA',
+    icon: '💬',
+    color: '#0068FF',
+    description: 'Đăng bài lên Zalo Official Account (Việt Nam)',
+    postizSupported: false, // Zalo not supported by Postiz, use direct OAuth
   },
 ];
 
 const SocialAccountsScreen = ({ onBack }) => {
   const { user } = useAuth();
   const [accounts, setAccounts] = useState([]);
+  const [postizAccounts, setPostizAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(null);
   const [toast, setToast] = useState(null);
+  const [usePostiz, setUsePostiz] = useState(true); // Toggle between Postiz and direct OAuth
 
+  // Fetch accounts from both Supabase (direct OAuth) and Postiz
   const fetchAccounts = async () => {
     try {
+      // Fetch from Supabase (direct OAuth accounts like Zalo)
       const { data, error } = await supabase
         .from('social_accounts')
         .select('*')
         .eq('user_id', user.id);
-      if (error) throw error;
-      setAccounts(data || []);
+      if (!error) setAccounts(data || []);
+
+      // Fetch from Postiz API
+      try {
+        const response = await fetch('/api/postiz/accounts');
+        if (response.ok) {
+          const { accounts: pAccounts } = await response.json();
+          setPostizAccounts(pAccounts || []);
+        }
+      } catch (postizError) {
+        console.log('Postiz not configured or unavailable');
+      }
     } catch (error) {
       console.error('Error fetching accounts:', error);
     } finally {
@@ -3221,14 +3276,14 @@ const SocialAccountsScreen = ({ onBack }) => {
     // Check for OAuth callback results in URL
     const params = new URLSearchParams(window.location.search);
     const socialSuccess = params.get('social_success');
+    const postizConnected = params.get('postiz_connected');
     const socialError = params.get('social_error');
 
-    if (socialSuccess) {
-      const platformName = SOCIAL_PLATFORMS.find(p => p.id === socialSuccess)?.name || socialSuccess;
+    if (socialSuccess || postizConnected) {
+      const platform = socialSuccess || postizConnected;
+      const platformName = SOCIAL_PLATFORMS.find(p => p.id === platform)?.name || platform;
       setToast({ message: `Đã kết nối ${platformName} thành công!`, type: 'success' });
-      // Clear URL params
       window.history.replaceState({}, '', window.location.pathname);
-      // Refresh accounts
       fetchAccounts();
     } else if (socialError) {
       setToast({ message: `Lỗi kết nối: ${socialError}`, type: 'error' });
@@ -3236,67 +3291,85 @@ const SocialAccountsScreen = ({ onBack }) => {
     }
   }, [user]);
 
+  // Handle connection based on platform support
   const handleConnect = (platform) => {
     setConnecting(platform.id);
-    // Redirect to OAuth API route
-    window.location.href = `/api/auth/${platform.id}?user_id=${user.id}`;
+
+    if (platform.postizSupported && usePostiz) {
+      // Use Postiz for supported platforms
+      window.location.href = `/api/postiz/connect?platform=${platform.id}`;
+    } else {
+      // Use direct OAuth for unsupported platforms (like Zalo)
+      window.location.href = `/api/auth/${platform.id}?user_id=${user.id}`;
+    }
   };
 
-  const handleDisconnect = async (accountId, platformName) => {
+  const handleDisconnect = async (accountId, platformName, isPostiz = false) => {
     if (!confirm(`Bạn có chắc muốn ngắt kết nối ${platformName}?`)) return;
 
     try {
-      const { error } = await supabase
-        .from('social_accounts')
-        .delete()
-        .eq('id', accountId);
-      if (error) throw error;
-      setAccounts(accounts.filter(a => a.id !== accountId));
-      setToast({ message: `Đã ngắt kết nối ${platformName}`, type: 'success' });
+      if (isPostiz) {
+        // TODO: Call Postiz API to disconnect
+        setToast({ message: 'Vui lòng ngắt kết nối qua Postiz dashboard', type: 'info' });
+      } else {
+        const { error } = await supabase
+          .from('social_accounts')
+          .delete()
+          .eq('id', accountId);
+        if (error) throw error;
+        setAccounts(accounts.filter(a => a.id !== accountId));
+        setToast({ message: `Đã ngắt kết nối ${platformName}`, type: 'success' });
+      }
     } catch (error) {
       setToast({ message: 'Có lỗi xảy ra', type: 'error' });
     }
   };
 
-  const handleRefreshToken = async (accountId, platformName) => {
-    try {
-      const response = await fetch('/api/auth/refresh-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ account_id: accountId }),
-      });
-      const data = await response.json();
-      if (data.error) throw new Error(data.error);
-      setToast({ message: `Đã làm mới token ${platformName}`, type: 'success' });
-      fetchAccounts();
-    } catch (error) {
-      setToast({ message: `Lỗi: ${error.message}`, type: 'error' });
-    }
-  };
-
+  // Check if platform is connected (from either Postiz or direct OAuth)
   const getConnectedAccount = (platformId) => {
-    return accounts.find(a => a.platform === platformId && a.is_active);
+    // Check Postiz accounts first
+    const postizAcc = postizAccounts.find(a => a.platform === platformId && a.is_active);
+    if (postizAcc) return { ...postizAcc, isPostiz: true };
+
+    // Then check direct OAuth accounts
+    const directAcc = accounts.find(a => a.platform === platformId && a.is_active);
+    if (directAcc) return { ...directAcc, isPostiz: false };
+
+    return null;
   };
 
-  const isTokenExpiringSoon = (expiresAt) => {
-    if (!expiresAt) return false;
-    const expiry = new Date(expiresAt);
-    const now = new Date();
-    const daysUntilExpiry = (expiry - now) / (1000 * 60 * 60 * 24);
-    return daysUntilExpiry < 7;
-  };
-
-  const formatExpiryDate = (expiresAt) => {
-    if (!expiresAt) return 'Không xác định';
-    const date = new Date(expiresAt);
-    return date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  };
+  // Count all connected accounts
+  const totalConnected = new Set([
+    ...accounts.filter(a => a.is_active).map(a => a.platform),
+    ...postizAccounts.filter(a => a.is_active).map(a => a.platform),
+  ]).size;
 
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
       <Header title="🔗 Kết nối mạng xã hội" onBack={onBack} showProfile={false} />
 
       <div className="p-4">
+        {/* Postiz Info Banner */}
+        <Card className="mb-4 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border-purple-500/30">
+          <div className="flex gap-3">
+            <div className="text-2xl">🚀</div>
+            <div>
+              <p className="text-white font-medium mb-1">Powered by Postiz</p>
+              <p className="text-slate-400 text-sm">
+                Sử dụng Postiz - nền tảng mã nguồn mở để kết nối và đăng bài tự động lên nhiều mạng xã hội.
+              </p>
+              <a
+                href="https://github.com/gitroomhq/postiz-app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 text-sm hover:underline inline-flex items-center gap-1 mt-2"
+              >
+                Tìm hiểu thêm →
+              </a>
+            </div>
+          </div>
+        </Card>
+
         {/* Info Banner */}
         <Card className="mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500/30">
           <div className="flex gap-3">
@@ -3314,7 +3387,7 @@ const SocialAccountsScreen = ({ onBack }) => {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Nền tảng</h3>
           <span className="text-slate-400 text-sm">
-            {accounts.filter(a => a.is_active).length}/{SOCIAL_PLATFORMS.length} đã kết nối
+            {totalConnected}/{SOCIAL_PLATFORMS.length} đã kết nối
           </span>
         </div>
 
@@ -3341,11 +3414,21 @@ const SocialAccountsScreen = ({ onBack }) => {
 
                     {/* Info */}
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h4 className="text-white font-medium">{platform.name}</h4>
                         {connected && (
                           <span className="bg-green-500/20 text-green-400 px-2 py-0.5 rounded text-xs">
                             Đã kết nối
+                          </span>
+                        )}
+                        {connected?.isPostiz && (
+                          <span className="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded text-xs">
+                            via Postiz
+                          </span>
+                        )}
+                        {platform.postizSupported && !connected && (
+                          <span className="bg-slate-700 text-slate-400 px-2 py-0.5 rounded text-xs">
+                            Postiz
                           </span>
                         )}
                       </div>
@@ -3355,27 +3438,30 @@ const SocialAccountsScreen = ({ onBack }) => {
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-slate-300 text-sm">
-                              {connected.platform_username}
+                              {connected.platform_username || connected.avatar ? (
+                                <span className="flex items-center gap-2">
+                                  {connected.avatar && (
+                                    <img src={connected.avatar} alt="" className="w-5 h-5 rounded-full" />
+                                  )}
+                                  {connected.platform_username}
+                                </span>
+                              ) : (
+                                'Đã kết nối'
+                              )}
                             </span>
                           </div>
 
-                          {/* Token expiry info */}
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className={`text-xs ${isTokenExpiringSoon(connected.token_expires_at) ? 'text-amber-400' : 'text-slate-500'}`}>
-                              {isTokenExpiringSoon(connected.token_expires_at) ? '⚠️' : '🔑'} Token hết hạn: {formatExpiryDate(connected.token_expires_at)}
-                            </span>
-                          </div>
+                          {/* Token expiry info - only for direct OAuth */}
+                          {!connected.isPostiz && connected.token_expires_at && (
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-xs text-slate-500">
+                                🔑 Token hết hạn: {new Date(connected.token_expires_at).toLocaleDateString('vi-VN')}
+                              </span>
+                            </div>
+                          )}
 
                           {/* Action buttons */}
-                          <div className="flex gap-2">
-                            {isTokenExpiringSoon(connected.token_expires_at) && (
-                              <button
-                                onClick={() => handleRefreshToken(connected.id, platform.name)}
-                                className="text-amber-400 text-xs bg-amber-500/10 px-2 py-1 rounded hover:bg-amber-500/20"
-                              >
-                                🔄 Làm mới token
-                              </button>
-                            )}
+                          <div className="flex flex-wrap gap-2">
                             <button
                               onClick={() => handleConnect(platform)}
                               className="text-blue-400 text-xs bg-blue-500/10 px-2 py-1 rounded hover:bg-blue-500/20"
@@ -3383,7 +3469,7 @@ const SocialAccountsScreen = ({ onBack }) => {
                               🔗 Kết nối lại
                             </button>
                             <button
-                              onClick={() => handleDisconnect(connected.id, platform.name)}
+                              onClick={() => handleDisconnect(connected.id, platform.name, connected.isPostiz)}
                               className="text-red-400 text-xs bg-red-500/10 px-2 py-1 rounded hover:bg-red-500/20"
                             >
                               ✗ Ngắt kết nối
