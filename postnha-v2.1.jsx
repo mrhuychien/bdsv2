@@ -78,6 +78,97 @@ const DISTRICTS_HCM = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 2: LANDING PAGE CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const LANDING_TEMPLATES = [
+  { id: 'modern-minimal-1', name: 'Modern Minimal', category: 'modern', color: '#F59E0B' },
+  { id: 'modern-minimal-2', name: 'Modern Clean', category: 'modern', color: '#3B82F6' },
+  { id: 'luxury-gold-1', name: 'Luxury Gold', category: 'luxury', color: '#D4AF37' },
+  { id: 'luxury-gold-2', name: 'Luxury Dark', category: 'luxury', color: '#1F2937' },
+  { id: 'compact-1', name: 'Compact Card', category: 'compact', color: '#10B981' },
+  { id: 'compact-2', name: 'Compact Info', category: 'compact', color: '#6366F1' },
+  { id: 'video-hero-1', name: 'Video Hero', category: 'video', color: '#EF4444' },
+  { id: 'video-hero-2', name: 'Video Scroll', category: 'video', color: '#8B5CF6' },
+  { id: 'gallery-focus-1', name: 'Gallery Grid', category: 'gallery', color: '#EC4899' },
+  { id: 'gallery-focus-2', name: 'Gallery Slide', category: 'gallery', color: '#14B8A6' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 3: CONTENT CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const PLATFORMS = [
+  { id: 'facebook', name: 'Facebook', icon: '📘', color: '#1877F2', maxLength: 63206 },
+  { id: 'zalo', name: 'Zalo', icon: '💬', color: '#0068FF', maxLength: 2000 },
+  { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#000000', maxLength: 2200 },
+];
+
+const CONTENT_TYPES = {
+  facebook: [
+    { id: 'post', name: 'Bài đăng', icon: '📝' },
+    { id: 'story', name: 'Story', icon: '📱' },
+    { id: 'carousel', name: 'Carousel', icon: '🖼️' },
+  ],
+  zalo: [
+    { id: 'post', name: 'Bài đăng', icon: '📝' },
+    { id: 'story', name: 'Nhật ký', icon: '📱' },
+  ],
+  tiktok: [
+    { id: 'script', name: 'Script video', icon: '🎬' },
+    { id: 'caption', name: 'Caption', icon: '📝' },
+  ],
+};
+
+const GOLDEN_HOURS = [
+  { time: '07:00', label: '7:00 - Sáng sớm' },
+  { time: '12:00', label: '12:00 - Giờ nghỉ trưa' },
+  { time: '18:00', label: '18:00 - Tan làm' },
+  { time: '21:00', label: '21:00 - Tối' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 4: AGENT PAGE CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const AGENT_TEMPLATES = [
+  { id: 'card-style', name: 'Card Style', description: 'Gọn gàng như danh thiếp' },
+  { id: 'full-page', name: 'Full Page', description: 'Trang đầy đủ với form liên hệ' },
+  { id: 'portfolio-style', name: 'Portfolio', description: 'Tập trung vào hình ảnh BĐS' },
+  { id: 'modern-dark', name: 'Modern Dark', description: 'Nền tối sang trọng' },
+  { id: 'professional-light', name: 'Professional', description: 'Sáng sủa, chuyên nghiệp' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 5: CRM CONSTANTS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const LEAD_SOURCES = [
+  { id: 'facebook', name: 'Facebook', icon: '📘', color: '#1877F2' },
+  { id: 'zalo', name: 'Zalo', icon: '💬', color: '#0068FF' },
+  { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#000000' },
+  { id: 'landing-page', name: 'Landing Page', icon: '📄', color: '#10B981' },
+  { id: 'referral', name: 'Giới thiệu', icon: '👥', color: '#8B5CF6' },
+  { id: 'other', name: 'Khác', icon: '📌', color: '#6B7280' },
+];
+
+const ACTIVITY_TYPES = [
+  { id: 'call', name: 'Gọi điện', icon: '📞' },
+  { id: 'message', name: 'Nhắn tin', icon: '💬' },
+  { id: 'meeting', name: 'Gặp mặt', icon: '🤝' },
+  { id: 'note', name: 'Ghi chú', icon: '📝' },
+];
+
+const DEFAULT_PIPELINE_STAGES = [
+  { id: 'lead', name: 'Lead mới', color: '#6B7280' },
+  { id: 'quan-tam', name: 'Quan tâm', color: '#3B82F6' },
+  { id: 'xem-nha', name: 'Xem nhà', color: '#F59E0B' },
+  { id: 'dam-phan', name: 'Đàm phán', color: '#8B5CF6' },
+  { id: 'chot', name: 'Chốt', color: '#22C55E' },
+  { id: 'mat', name: 'Mất', color: '#EF4444' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
 //                         AUTH CONTEXT
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -638,13 +729,18 @@ const PropertyCard = ({ property, onClick, onCreateLP, onCreateContent }) => {
 //                         HEADER COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const Header = ({ title, showProfile = true, onBack }) => {
+const Header = ({ title, showProfile = true, onBack, onNavigate }) => {
   const { profile, signOut } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
     setShowMenu(false);
+  };
+
+  const handleMenuClick = (screen) => {
+    setShowMenu(false);
+    onNavigate?.(screen);
   };
 
   return (
@@ -669,16 +765,39 @@ const Header = ({ title, showProfile = true, onBack }) => {
             </button>
 
             {showMenu && (
-              <div className="absolute right-0 top-12 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-2 min-w-[180px]">
+              <div className="absolute right-0 top-12 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-2 min-w-[200px] z-50">
                 <div className="px-4 py-2 border-b border-slate-700">
                   <p className="font-semibold text-white">{profile?.full_name || 'User'}</p>
                   <p className="text-sm text-slate-400">{profile?.email}</p>
                 </div>
+                {onNavigate && (
+                  <>
+                    <button
+                      onClick={() => handleMenuClick('profile-settings')}
+                      className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                    >
+                      <span>👤</span> Hồ sơ cá nhân
+                    </button>
+                    <button
+                      onClick={() => handleMenuClick('agent-page-builder')}
+                      className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                    >
+                      <span>🌐</span> Trang cá nhân
+                    </button>
+                    <button
+                      onClick={() => handleMenuClick('landing-pages')}
+                      className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors flex items-center gap-2"
+                    >
+                      <span>🔗</span> Landing Pages
+                    </button>
+                    <div className="border-t border-slate-700 my-1"></div>
+                  </>
+                )}
                 <button
                   onClick={handleSignOut}
-                  className="w-full px-4 py-2 text-left text-red-400 hover:bg-slate-700 transition-colors"
+                  className="w-full px-4 py-2 text-left text-red-400 hover:bg-slate-700 transition-colors flex items-center gap-2"
                 >
-                  Đăng xuất
+                  <span>🚪</span> Đăng xuất
                 </button>
               </div>
             )}
@@ -1152,8 +1271,8 @@ const PropertiesScreen = ({ onNavigate }) => {
               key={property.id}
               property={property}
               onClick={() => onNavigate('property-detail', property.id)}
-              onCreateLP={() => alert('Tính năng Tạo Landing Page sẽ có ở Phase 2')}
-              onCreateContent={() => alert('Tính năng Tạo Content sẽ có ở Phase 3')}
+              onCreateLP={() => onNavigate('create-landing-page', { propertyId: property.id })}
+              onCreateContent={() => onNavigate('create-content', { propertyId: property.id })}
             />
           ))
         )}
@@ -1391,14 +1510,14 @@ const PropertyDetailScreen = ({ propertyId, onNavigate, onBack }) => {
           <Button
             variant="secondary"
             className="flex-1"
-            onClick={() => alert('Tính năng Tạo Landing Page sẽ có ở Phase 2')}
+            onClick={() => onNavigate('create-landing-page', { propertyId: property.id })}
           >
             🔗 Tạo Landing Page
           </Button>
           <Button
             variant="secondary"
             className="flex-1"
-            onClick={() => alert('Tính năng Tạo Content sẽ có ở Phase 3')}
+            onClick={() => onNavigate('create-content', { propertyId: property.id })}
           >
             📱 Tạo Content
           </Button>
@@ -1792,12 +1911,12 @@ const PropertyFormScreen = ({ propertyId, onBack }) => {
 //                         PLACEHOLDER SCREENS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const HomeScreen = () => {
+const HomeScreen = ({ onNavigate }) => {
   const { profile } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
-      <Header title="🏠 Trang chủ" />
+      <Header title="🏠 Trang chủ" onNavigate={onNavigate} />
 
       <div className="p-4">
         <Card className="mb-4">
@@ -1805,72 +1924,1737 @@ const HomeScreen = () => {
             Xin chào, {profile?.full_name || 'Môi giới'}! 👋
           </h2>
           <p className="text-slate-400">
-            Chào mừng đến với PostNhà Platform v2.1
+            Chào mừng đến với PostNhà Platform v2.5
           </p>
         </Card>
 
-        <Card className="text-center py-8">
-          <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-lg font-semibold text-white mb-2">Dashboard đang xây dựng</h3>
-          <p className="text-slate-400">
-            Thống kê và báo cáo sẽ có ở các Phase tiếp theo
-          </p>
+        {/* Quick Actions */}
+        <h3 className="text-lg font-semibold text-white mb-3">⚡ Truy cập nhanh</h3>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Card className="text-center py-4" onClick={() => onNavigate('add-property')}>
+            <div className="text-2xl mb-1">🏠</div>
+            <p className="text-white text-sm">Thêm BĐS</p>
+          </Card>
+          <Card className="text-center py-4" onClick={() => onNavigate('create-landing-page')}>
+            <div className="text-2xl mb-1">🔗</div>
+            <p className="text-white text-sm">Tạo LP</p>
+          </Card>
+          <Card className="text-center py-4" onClick={() => onNavigate('create-content')}>
+            <div className="text-2xl mb-1">📱</div>
+            <p className="text-white text-sm">Tạo Content</p>
+          </Card>
+          <Card className="text-center py-4" onClick={() => onNavigate('add-lead')}>
+            <div className="text-2xl mb-1">👤</div>
+            <p className="text-white text-sm">Thêm Lead</p>
+          </Card>
+        </div>
+
+        {/* Profile & Agent Page */}
+        <h3 className="text-lg font-semibold text-white mb-3">👤 Hồ sơ của bạn</h3>
+        <Card className="mb-3" onClick={() => onNavigate('profile-settings')}>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-xl text-white font-bold">
+              {profile?.full_name?.charAt(0) || 'U'}
+            </div>
+            <div className="flex-1">
+              <p className="text-white font-medium">{profile?.full_name || 'Cập nhật hồ sơ'}</p>
+              <p className="text-slate-400 text-sm">{profile?.phone || 'Thêm thông tin cá nhân'}</p>
+            </div>
+            <span className="text-slate-500">→</span>
+          </div>
+        </Card>
+
+        <Card onClick={() => onNavigate('agent-page-builder')}>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-xl">🌐</div>
+            <div className="flex-1">
+              <p className="text-white font-medium">Trang cá nhân</p>
+              <p className="text-slate-400 text-sm">
+                {profile?.agent_page_slug ? `postnha.vn/agent/${profile.agent_page_slug}` : 'Tạo trang giới thiệu của bạn'}
+              </p>
+            </div>
+            <span className="text-slate-500">→</span>
+          </div>
         </Card>
       </div>
     </div>
   );
 };
 
-const CreateScreen = () => {
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 2: LANDING PAGE SCREENS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const CreateScreen = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
       <Header title="➕ Tạo mới" />
-
       <div className="p-4">
-        <Card className="text-center py-12">
-          <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-lg font-semibold text-white mb-2">Tính năng đang xây dựng</h3>
-          <p className="text-slate-400">
-            Tạo Landing Page và Content sẽ có ở Phase 2 & 3
-          </p>
+        <Card className="mb-4" onClick={() => onNavigate('create-landing-page')}>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-2xl">🔗</div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Tạo Landing Page</h3>
+              <p className="text-slate-400 text-sm">Tạo trang giới thiệu BĐS chuyên nghiệp</p>
+            </div>
+          </div>
+        </Card>
+        <Card className="mb-4" onClick={() => onNavigate('create-content')}>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-2xl">📱</div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Tạo Content MXH</h3>
+              <p className="text-slate-400 text-sm">AI viết content cho Facebook, Zalo, TikTok</p>
+            </div>
+          </div>
+        </Card>
+        <Card onClick={() => onNavigate('add-property')}>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center text-2xl">🏠</div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Thêm BĐS mới</h3>
+              <p className="text-slate-400 text-sm">Thêm BĐS vào kho hàng</p>
+            </div>
+          </div>
         </Card>
       </div>
     </div>
   );
 };
 
-const ContentScreen = () => {
+const LandingPagesListScreen = ({ onNavigate, onBack }) => {
+  const { user } = useAuth();
+  const [landingPages, setLandingPages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLandingPages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('landing_pages')
+          .select('*, property:properties(*)')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setLandingPages(data || []);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLandingPages();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
-      <Header title="📱 Content" />
-
+      <Header title="🔗 Landing Pages" onBack={onBack} />
       <div className="p-4">
-        <Card className="text-center py-12">
-          <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-lg font-semibold text-white mb-2">Tính năng đang xây dựng</h3>
-          <p className="text-slate-400">
-            Content Factory sẽ có ở Phase 3
-          </p>
-        </Card>
+        <Button onClick={() => onNavigate('create-landing-page')} className="w-full mb-4">
+          + Tạo Landing Page mới
+        </Button>
+        {landingPages.length === 0 ? (
+          <EmptyState
+            icon="🔗"
+            title="Chưa có Landing Page"
+            description="Tạo landing page đầu tiên để quảng bá BĐS"
+          />
+        ) : (
+          landingPages.map(lp => (
+            <Card key={lp.id} className="mb-3" onClick={() => onNavigate('landing-page-detail', lp.id)}>
+              <div className="flex gap-3">
+                {lp.property?.images?.[0] ? (
+                  <img src={lp.property.images[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
+                )}
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold line-clamp-1">{lp.custom_title || lp.property?.title}</h3>
+                  <p className="text-slate-400 text-sm">/{lp.slug}</p>
+                  <div className="flex gap-2 mt-1">
+                    <span className="text-xs text-slate-500">👁 {lp.view_count || 0}</span>
+                    <span className="text-xs text-slate-500">📞 {lp.lead_count || 0}</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
 };
 
-const CRMScreen = () => {
+const CreateLandingPageScreen = ({ onBack, onNavigate }) => {
+  const { user } = useAuth();
+  const [step, setStep] = useState(1);
+  const [properties, setProperties] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedTemplate, setSelectedTemplate] = useState('modern-minimal-1');
+  const [formData, setFormData] = useState({
+    custom_title: '',
+    custom_description: '',
+    custom_cta_text: 'Liên hệ ngay',
+    custom_cta_phone: '',
+    slug: '',
+  });
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const { data } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'dang-ban')
+        .order('created_at', { ascending: false });
+      setProperties(data || []);
+    };
+    fetchProperties();
+  }, [user]);
+
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .substring(0, 30) + '-' + Math.random().toString(36).substring(2, 6);
+  };
+
+  const handleSelectProperty = (property) => {
+    setSelectedProperty(property);
+    setFormData({
+      ...formData,
+      custom_title: property.title,
+      custom_cta_phone: property.owner_phone || '',
+      slug: generateSlug(property.title),
+    });
+    setStep(2);
+  };
+
+  const handleSave = async () => {
+    if (!selectedProperty || !formData.slug) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('landing_pages').insert({
+        user_id: user.id,
+        property_id: selectedProperty.id,
+        template_id: selectedTemplate,
+        slug: formData.slug,
+        custom_title: formData.custom_title,
+        custom_description: formData.custom_description,
+        custom_cta_text: formData.custom_cta_text,
+        custom_cta_phone: formData.custom_cta_phone,
+      });
+      if (error) throw error;
+      setToast({ message: 'Tạo Landing Page thành công!', type: 'success' });
+      setTimeout(() => onBack(), 1500);
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title={`Tạo Landing Page (${step}/4)`} onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        {/* Step indicators */}
+        <div className="flex gap-2 mb-6">
+          {[1, 2, 3, 4].map(s => (
+            <div key={s} className={`flex-1 h-1 rounded ${s <= step ? 'bg-amber-500' : 'bg-slate-700'}`} />
+          ))}
+        </div>
+
+        {step === 1 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Chọn BĐS</h2>
+            {properties.length === 0 ? (
+              <EmptyState icon="📦" title="Chưa có BĐS" description="Thêm BĐS trước khi tạo Landing Page" />
+            ) : (
+              properties.map(p => (
+                <Card key={p.id} className="mb-3" onClick={() => handleSelectProperty(p)}>
+                  <div className="flex gap-3">
+                    {p.images?.[0] ? (
+                      <img src={p.images[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
+                    )}
+                    <div>
+                      <h3 className="text-white font-semibold line-clamp-1">{p.title}</h3>
+                      <p className="text-amber-500 text-sm">{formatPrice(p.price, p.price_unit)}</p>
+                      <p className="text-slate-400 text-xs">{p.district}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Chọn Template</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {LANDING_TEMPLATES.map(t => (
+                <Card
+                  key={t.id}
+                  className={`text-center py-4 ${selectedTemplate === t.id ? 'border-amber-500' : ''}`}
+                  onClick={() => setSelectedTemplate(t.id)}
+                >
+                  <div className="w-10 h-10 rounded-lg mx-auto mb-2" style={{ backgroundColor: t.color }} />
+                  <p className="text-white text-sm font-medium">{t.name}</p>
+                  {selectedTemplate === t.id && <span className="text-amber-500 text-xs">✓ Đã chọn</span>}
+                </Card>
+              ))}
+            </div>
+            <Button onClick={() => setStep(3)} className="w-full mt-4">Tiếp tục</Button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Tùy chỉnh nội dung</h2>
+            <Input
+              label="Tiêu đề"
+              value={formData.custom_title}
+              onChange={(e) => setFormData({ ...formData, custom_title: e.target.value })}
+              placeholder="Tiêu đề landing page"
+            />
+            <Textarea
+              label="Mô tả ngắn"
+              value={formData.custom_description}
+              onChange={(e) => setFormData({ ...formData, custom_description: e.target.value })}
+              placeholder="Mô tả hấp dẫn về BĐS..."
+              rows={3}
+            />
+            <Input
+              label="Nút CTA"
+              value={formData.custom_cta_text}
+              onChange={(e) => setFormData({ ...formData, custom_cta_text: e.target.value })}
+              placeholder="Liên hệ ngay"
+            />
+            <Input
+              label="SĐT liên hệ"
+              value={formData.custom_cta_phone}
+              onChange={(e) => setFormData({ ...formData, custom_cta_phone: e.target.value })}
+              placeholder="0909..."
+            />
+            <Button onClick={() => setStep(4)} className="w-full mt-4">Tiếp tục</Button>
+          </>
+        )}
+
+        {step === 4 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Đường dẫn & Xuất bản</h2>
+            <div className="mb-4">
+              <label className="block text-slate-300 text-sm font-medium mb-2">Đường dẫn</label>
+              <div className="flex items-center bg-slate-800 border border-slate-600 rounded-xl overflow-hidden">
+                <span className="px-3 text-slate-500 text-sm">postnha.vn/p/</span>
+                <input
+                  type="text"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+                  className="flex-1 bg-transparent px-2 py-3 text-white focus:outline-none"
+                />
+              </div>
+            </div>
+            <Card className="mb-4">
+              <h3 className="text-white font-semibold mb-2">Xem trước</h3>
+              <div className="bg-slate-700 rounded-lg p-4 text-center">
+                <p className="text-amber-500 font-semibold">{formData.custom_title}</p>
+                <p className="text-slate-400 text-sm mt-1">{selectedProperty?.district}</p>
+                <p className="text-white mt-2">{formatPrice(selectedProperty?.price, selectedProperty?.price_unit)}</p>
+              </div>
+            </Card>
+            <Button onClick={handleSave} loading={saving} className="w-full">
+              🚀 Xuất bản Landing Page
+            </Button>
+          </>
+        )}
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 3: CONTENT MANAGER SCREENS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const ContentScreen = ({ onNavigate }) => {
+  const { user } = useAuth();
+  const [contents, setContents] = useState([]);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: props } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'dang-ban')
+        .limit(5);
+      setProperties(props || []);
+      setLoading(false);
+    };
+    fetchData();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="📱 Content Factory" />
+      <div className="p-4">
+        {/* Quick Actions */}
+        <h3 className="text-lg font-semibold text-white mb-3">Tạo content nhanh</h3>
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {PLATFORMS.map(p => (
+            <Card key={p.id} className="text-center py-4" onClick={() => onNavigate('create-content', { platform: p.id })}>
+              <div className="text-2xl mb-1">{p.icon}</div>
+              <p className="text-white text-sm">{p.name}</p>
+            </Card>
+          ))}
+        </div>
+
+        {/* Recent Properties */}
+        <h3 className="text-lg font-semibold text-white mb-3">BĐS có thể tạo content</h3>
+        {properties.length === 0 ? (
+          <Card className="text-center py-6">
+            <p className="text-slate-400">Thêm BĐS để bắt đầu tạo content</p>
+          </Card>
+        ) : (
+          properties.map(p => (
+            <Card key={p.id} className="mb-3" onClick={() => onNavigate('create-content', { propertyId: p.id })}>
+              <div className="flex gap-3">
+                {p.images?.[0] ? (
+                  <img src={p.images[0]} alt="" className="w-14 h-14 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-14 h-14 bg-slate-700 rounded-lg flex items-center justify-center">🏠</div>
+                )}
+                <div className="flex-1">
+                  <h4 className="text-white font-medium line-clamp-1">{p.title}</h4>
+                  <p className="text-amber-500 text-sm">{formatPrice(p.price, p.price_unit)}</p>
+                </div>
+                <Button variant="ghost" size="sm">Tạo →</Button>
+              </div>
+            </Card>
+          ))
+        )}
+
+        <Button onClick={() => onNavigate('create-content')} className="w-full mt-4">
+          ✨ Tạo content mới với AI
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const CreateContentScreen = ({ onBack, params }) => {
+  const { user } = useAuth();
+  const [step, setStep] = useState(1);
+  const [platform, setPlatform] = useState(params?.platform || 'facebook');
+  const [contentType, setContentType] = useState('post');
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [properties, setProperties] = useState([]);
+  const [generatedContent, setGeneratedContent] = useState('');
+  const [generating, setGenerating] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const { data } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      setProperties(data || []);
+      if (params?.propertyId) {
+        setSelectedProperty(data?.find(p => p.id === params.propertyId) || null);
+        setStep(2);
+      }
+    };
+    fetchProperties();
+  }, [user, params]);
+
+  const generateContent = async () => {
+    if (!selectedProperty) return;
+    setGenerating(true);
+
+    // Simulate AI generation with template-based content
+    const templates = {
+      facebook: {
+        post: `🏠 ${selectedProperty.title}\n\n📍 Vị trí: ${selectedProperty.district}, ${selectedProperty.city}\n💰 Giá: ${formatPrice(selectedProperty.price, selectedProperty.price_unit)}\n📐 Diện tích: ${selectedProperty.area || 'Liên hệ'}m²\n🛏️ Phòng ngủ: ${selectedProperty.bedrooms || 'Liên hệ'}\n\n${selectedProperty.description || 'BĐS đẹp, vị trí thuận tiện, giá tốt!'}\n\n✨ Tiện ích: ${selectedProperty.features?.join(', ') || 'Đầy đủ tiện nghi'}\n\n📞 Liên hệ ngay để được tư vấn!\n\n#bds #batdongsan #${selectedProperty.district?.replace(/\s/g, '').toLowerCase() || 'hcm'}`,
+        story: `🔥 HOT! ${selectedProperty.title}\n💰 ${formatPrice(selectedProperty.price, selectedProperty.price_unit)}\n📍 ${selectedProperty.district}\n\nSwipe up để xem chi tiết! 👆`,
+        carousel: `Slide 1: 🏠 ${selectedProperty.title}\n\nSlide 2: 📍 ${selectedProperty.district}, ${selectedProperty.city}\n\nSlide 3: 💰 ${formatPrice(selectedProperty.price, selectedProperty.price_unit)} - ${selectedProperty.area}m²\n\nSlide 4: ✨ ${selectedProperty.features?.slice(0, 3).join(' • ') || 'Tiện ích đầy đủ'}\n\nSlide 5: 📞 Liên hệ ngay!`,
+      },
+      zalo: {
+        post: `🏠 ${selectedProperty.title}\n\n📍 ${selectedProperty.district}\n💰 ${formatPrice(selectedProperty.price, selectedProperty.price_unit)}\n📐 ${selectedProperty.area}m² | 🛏️ ${selectedProperty.bedrooms} PN\n\nLiên hệ em để xem nhà ạ! 🙏`,
+        story: `${selectedProperty.title}\n${formatPrice(selectedProperty.price, selectedProperty.price_unit)}\nChat ngay! 💬`,
+      },
+      tiktok: {
+        script: `[HOOK - 3s]\n"Căn nhà ${formatPrice(selectedProperty.price, selectedProperty.price_unit)} ở ${selectedProperty.district} có gì hot?"\n\n[CONTENT - 15s]\n- Diện tích ${selectedProperty.area}m²\n- ${selectedProperty.bedrooms} phòng ngủ rộng rãi\n- ${selectedProperty.features?.[0] || 'Nội thất cao cấp'}\n- Vị trí đắc địa\n\n[CTA - 3s]\n"Comment SĐT để được tư vấn FREE!"\n\n#batdongsan #nhadep #${selectedProperty.district?.replace(/\s/g, '').toLowerCase() || 'hcm'}`,
+        caption: `${selectedProperty.title} 🏠\n💰 ${formatPrice(selectedProperty.price, selectedProperty.price_unit)}\n📍 ${selectedProperty.district}\n\nComment "QUAN TÂM" để nhận thông tin chi tiết! 👇\n\n#fyp #batdongsan #nhadep #review`,
+      },
+    };
+
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
+    setGeneratedContent(templates[platform]?.[contentType] || 'Nội dung được tạo bởi AI...');
+    setGenerating(false);
+    setStep(3);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedContent);
+    setToast({ message: 'Đã copy nội dung!', type: 'success' });
+  };
+
+  const platformInfo = PLATFORMS.find(p => p.id === platform);
+  const types = CONTENT_TYPES[platform] || [];
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="✨ Tạo Content AI" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        {/* Steps */}
+        <div className="flex gap-2 mb-6">
+          {[1, 2, 3].map(s => (
+            <div key={s} className={`flex-1 h-1 rounded ${s <= step ? 'bg-amber-500' : 'bg-slate-700'}`} />
+          ))}
+        </div>
+
+        {step === 1 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Chọn nền tảng & loại content</h2>
+
+            <h3 className="text-slate-300 text-sm mb-2">Nền tảng</h3>
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {PLATFORMS.map(p => (
+                <Card
+                  key={p.id}
+                  className={`text-center py-3 ${platform === p.id ? 'border-amber-500' : ''}`}
+                  onClick={() => { setPlatform(p.id); setContentType(CONTENT_TYPES[p.id]?.[0]?.id || 'post'); }}
+                >
+                  <div className="text-xl mb-1">{p.icon}</div>
+                  <p className="text-white text-xs">{p.name}</p>
+                </Card>
+              ))}
+            </div>
+
+            <h3 className="text-slate-300 text-sm mb-2">Loại content</h3>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {types.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => setContentType(t.id)}
+                  className={`px-4 py-2 rounded-xl text-sm ${contentType === t.id ? 'bg-amber-500 text-white' : 'bg-slate-800 text-slate-300'}`}
+                >
+                  {t.icon} {t.name}
+                </button>
+              ))}
+            </div>
+
+            <h3 className="text-slate-300 text-sm mb-2">Chọn BĐS</h3>
+            {properties.map(p => (
+              <Card
+                key={p.id}
+                className={`mb-2 ${selectedProperty?.id === p.id ? 'border-amber-500' : ''}`}
+                onClick={() => setSelectedProperty(p)}
+              >
+                <div className="flex gap-3 items-center">
+                  <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center overflow-hidden">
+                    {p.images?.[0] ? <img src={p.images[0]} alt="" className="w-full h-full object-cover" /> : '🏠'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium line-clamp-1">{p.title}</p>
+                    <p className="text-slate-400 text-sm">{formatPrice(p.price, p.price_unit)}</p>
+                  </div>
+                  {selectedProperty?.id === p.id && <span className="text-amber-500">✓</span>}
+                </div>
+              </Card>
+            ))}
+
+            <Button onClick={() => setStep(2)} disabled={!selectedProperty} className="w-full mt-4">
+              Tiếp tục
+            </Button>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Tạo nội dung với AI</h2>
+
+            <Card className="mb-4">
+              <div className="flex gap-3 items-center">
+                <div className="text-2xl">{platformInfo?.icon}</div>
+                <div>
+                  <p className="text-white font-medium">{platformInfo?.name} - {types.find(t => t.id === contentType)?.name}</p>
+                  <p className="text-slate-400 text-sm">{selectedProperty?.title}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="mb-4 text-center py-8">
+              <div className="text-4xl mb-3">🤖</div>
+              <p className="text-white font-medium mb-2">AI sẽ viết content cho bạn</p>
+              <p className="text-slate-400 text-sm mb-4">
+                Dựa trên thông tin BĐS: {selectedProperty?.title}
+              </p>
+            </Card>
+
+            <Button onClick={generateContent} loading={generating} className="w-full">
+              ✨ Tạo content với AI
+            </Button>
+            <Button variant="ghost" onClick={() => setStep(1)} className="w-full mt-2">
+              ← Quay lại
+            </Button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 className="text-xl font-bold text-white mb-4">Nội dung đã tạo</h2>
+
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xl">{platformInfo?.icon}</span>
+              <span className="text-white">{platformInfo?.name}</span>
+              <span className="text-slate-500">•</span>
+              <span className="text-slate-400 text-sm">{generatedContent.length} ký tự</span>
+            </div>
+
+            <Card className="mb-4">
+              <textarea
+                value={generatedContent}
+                onChange={(e) => setGeneratedContent(e.target.value)}
+                className="w-full bg-transparent text-white text-sm resize-none focus:outline-none"
+                rows={12}
+              />
+            </Card>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="secondary" onClick={copyToClipboard}>
+                📋 Copy
+              </Button>
+              <Button onClick={() => { setStep(2); setGeneratedContent(''); }}>
+                🔄 Tạo lại
+              </Button>
+            </div>
+
+            <Card className="mt-4 text-center py-4">
+              <p className="text-slate-400 text-sm mb-2">Giờ vàng đăng bài</p>
+              <div className="flex justify-center gap-2 flex-wrap">
+                {GOLDEN_HOURS.map(h => (
+                  <span key={h.time} className="bg-slate-700 px-3 py-1 rounded-full text-xs text-white">
+                    {h.label}
+                  </span>
+                ))}
+              </div>
+            </Card>
+          </>
+        )}
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 4: AGENT PROFILE SCREENS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const ProfileSettingsScreen = ({ onBack }) => {
+  const { user, profile, fetchProfile } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [formData, setFormData] = useState({
+    full_name: profile?.full_name || '',
+    phone: profile?.phone || '',
+    email: profile?.email || '',
+    bio: profile?.bio || '',
+    experience_years: profile?.experience_years || 0,
+    specialization: profile?.specialization || [],
+    areas: profile?.areas || [],
+    social_links: profile?.social_links || {},
+  });
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update(formData)
+        .eq('id', user.id);
+      if (error) throw error;
+      await fetchProfile(user.id);
+      setToast({ message: 'Đã lưu thông tin!', type: 'success' });
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggleSpecialization = (type) => {
+    const specs = formData.specialization || [];
+    if (specs.includes(type)) {
+      setFormData({ ...formData, specialization: specs.filter(s => s !== type) });
+    } else {
+      setFormData({ ...formData, specialization: [...specs, type] });
+    }
+  };
+
+  const toggleArea = (area) => {
+    const areas = formData.areas || [];
+    if (areas.includes(area)) {
+      setFormData({ ...formData, areas: areas.filter(a => a !== area) });
+    } else {
+      setFormData({ ...formData, areas: [...areas, area] });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="👤 Hồ sơ cá nhân" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        {/* Avatar */}
+        <div className="text-center mb-6">
+          <div className="w-24 h-24 mx-auto bg-amber-500 rounded-full flex items-center justify-center text-3xl text-white font-bold mb-2">
+            {formData.full_name?.charAt(0) || 'U'}
+          </div>
+          <p className="text-slate-400 text-sm">Ảnh đại diện</p>
+        </div>
+
+        {/* Basic Info */}
+        <h3 className="text-lg font-semibold text-white mb-3">📋 Thông tin cơ bản</h3>
+        <Input
+          label="Họ và tên"
+          value={formData.full_name}
+          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+          placeholder="Nguyễn Văn A"
+        />
+        <Input
+          label="Số điện thoại"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          placeholder="0909..."
+        />
+        <Input
+          label="Email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          placeholder="email@example.com"
+        />
+        <Input
+          label="Số năm kinh nghiệm"
+          type="number"
+          value={formData.experience_years}
+          onChange={(e) => setFormData({ ...formData, experience_years: parseInt(e.target.value) || 0 })}
+          placeholder="5"
+        />
+
+        {/* Bio */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">📝 Giới thiệu bản thân</h3>
+        <Textarea
+          value={formData.bio}
+          onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+          placeholder="Tôi là chuyên viên tư vấn BĐS với nhiều năm kinh nghiệm..."
+          rows={4}
+        />
+
+        {/* Specialization */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">🏠 Chuyên môn</h3>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {PROPERTY_TYPES.map(t => (
+            <button
+              key={t.value}
+              onClick={() => toggleSpecialization(t.value)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                formData.specialization?.includes(t.value)
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-800 text-slate-300'
+              }`}
+            >
+              {t.icon} {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Areas */}
+        <h3 className="text-lg font-semibold text-white mb-3">📍 Khu vực hoạt động</h3>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {DISTRICTS_HCM.slice(0, 12).map(d => (
+            <button
+              key={d}
+              onClick={() => toggleArea(d)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                formData.areas?.includes(d)
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-800 text-slate-300'
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+
+        {/* Social Links */}
+        <h3 className="text-lg font-semibold text-white mb-3">🔗 Mạng xã hội</h3>
+        <Input
+          label="Facebook"
+          value={formData.social_links?.facebook || ''}
+          onChange={(e) => setFormData({ ...formData, social_links: { ...formData.social_links, facebook: e.target.value } })}
+          placeholder="https://fb.com/..."
+        />
+        <Input
+          label="Zalo"
+          value={formData.social_links?.zalo || ''}
+          onChange={(e) => setFormData({ ...formData, social_links: { ...formData.social_links, zalo: e.target.value } })}
+          placeholder="SĐT Zalo"
+        />
+        <Input
+          label="TikTok"
+          value={formData.social_links?.tiktok || ''}
+          onChange={(e) => setFormData({ ...formData, social_links: { ...formData.social_links, tiktok: e.target.value } })}
+          placeholder="@username"
+        />
+
+        <Button onClick={handleSave} loading={saving} className="w-full mt-4">
+          💾 Lưu thông tin
+        </Button>
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+const AgentPageBuilderScreen = ({ onBack }) => {
+  const { user, profile, fetchProfile } = useAuth();
+  const [selectedTemplate, setSelectedTemplate] = useState(profile?.agent_page_template || 'card-style');
+  const [slug, setSlug] = useState(profile?.agent_page_slug || '');
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [published, setPublished] = useState(!!profile?.agent_page_slug);
+
+  const generateSlug = () => {
+    const base = (profile?.full_name || 'agent')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    return base + '-' + Math.random().toString(36).substring(2, 6);
+  };
+
+  const handlePublish = async () => {
+    if (!slug) {
+      setSlug(generateSlug());
+      return;
+    }
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          agent_page_slug: slug,
+          agent_page_template: selectedTemplate,
+        })
+        .eq('id', user.id);
+      if (error) throw error;
+      await fetchProfile(user.id);
+      setPublished(true);
+      setToast({ message: 'Đã xuất bản trang cá nhân!', type: 'success' });
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(`postnha.vn/agent/${slug}`);
+    setToast({ message: 'Đã copy link!', type: 'success' });
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="🌐 Trang cá nhân" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        {/* Template Selection */}
+        <h3 className="text-lg font-semibold text-white mb-3">🎨 Chọn template</h3>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {AGENT_TEMPLATES.map(t => (
+            <Card
+              key={t.id}
+              className={`text-center py-4 ${selectedTemplate === t.id ? 'border-amber-500' : ''}`}
+              onClick={() => setSelectedTemplate(t.id)}
+            >
+              <div className="text-2xl mb-2">
+                {t.id === 'card-style' ? '💳' : t.id === 'full-page' ? '📄' : t.id === 'portfolio-style' ? '🖼️' : t.id === 'modern-dark' ? '🌙' : '☀️'}
+              </div>
+              <p className="text-white text-sm font-medium">{t.name}</p>
+              <p className="text-slate-400 text-xs mt-1">{t.description}</p>
+              {selectedTemplate === t.id && <span className="text-amber-500 text-xs">✓</span>}
+            </Card>
+          ))}
+        </div>
+
+        {/* Slug */}
+        <h3 className="text-lg font-semibold text-white mb-3">🔗 Đường dẫn</h3>
+        <div className="flex items-center bg-slate-800 border border-slate-600 rounded-xl overflow-hidden mb-2">
+          <span className="px-3 text-slate-500 text-sm">postnha.vn/agent/</span>
+          <input
+            type="text"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+            placeholder="ten-cua-ban"
+            className="flex-1 bg-transparent px-2 py-3 text-white focus:outline-none"
+          />
+        </div>
+        {!slug && (
+          <button onClick={() => setSlug(generateSlug())} className="text-amber-500 text-sm mb-4">
+            ✨ Tạo tự động
+          </button>
+        )}
+
+        {/* Preview Card */}
+        <Card className="mb-4 text-center py-6">
+          <div className="w-16 h-16 mx-auto bg-amber-500 rounded-full flex items-center justify-center text-2xl text-white font-bold mb-3">
+            {profile?.full_name?.charAt(0) || 'U'}
+          </div>
+          <h4 className="text-white font-semibold">{profile?.full_name || 'Tên của bạn'}</h4>
+          <p className="text-slate-400 text-sm">Chuyên viên tư vấn BĐS</p>
+          {profile?.experience_years > 0 && (
+            <p className="text-amber-500 text-sm mt-1">⭐ {profile.experience_years} năm kinh nghiệm</p>
+          )}
+        </Card>
+
+        {/* Actions */}
+        {published ? (
+          <>
+            <Card className="mb-4 text-center py-4 bg-green-900/30 border-green-500">
+              <p className="text-green-400 font-medium">✅ Trang đã được xuất bản</p>
+              <p className="text-slate-400 text-sm mt-1">postnha.vn/agent/{slug}</p>
+            </Card>
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="secondary" onClick={copyLink}>📋 Copy link</Button>
+              <Button onClick={handlePublish} loading={saving}>🔄 Cập nhật</Button>
+            </div>
+          </>
+        ) : (
+          <Button onClick={handlePublish} loading={saving} className="w-full">
+            🚀 Xuất bản trang cá nhân
+          </Button>
+        )}
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         PHASE 5: CRM SCREENS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const CRMScreen = ({ onNavigate }) => {
+  const { user } = useAuth();
+  const [stats, setStats] = useState({ total: 0, thisWeek: 0, today: 0 });
+  const [recentLeads, setRecentLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Get stats
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const weekAgo = new Date(today);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+
+      const { count: total } = await supabase
+        .from('crm_leads')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+
+      const { count: thisWeek } = await supabase
+        .from('crm_leads')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', weekAgo.toISOString());
+
+      const { count: todayCount } = await supabase
+        .from('crm_leads')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', today.toISOString());
+
+      setStats({ total: total || 0, thisWeek: thisWeek || 0, today: todayCount || 0 });
+
+      // Get recent leads
+      const { data: leads } = await supabase
+        .from('crm_leads')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      setRecentLeads(leads || []);
+      setLoading(false);
+    };
+    fetchData();
+  }, [user]);
+
+  const getSourceInfo = (source) => LEAD_SOURCES.find(s => s.id === source) || LEAD_SOURCES[5];
+  const getStageInfo = (status) => DEFAULT_PIPELINE_STAGES.find(s => s.id === status) || DEFAULT_PIPELINE_STAGES[0];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 pb-20">
       <Header title="👤 CRM" />
+      <div className="p-4">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <Card className="text-center py-4">
+            <p className="text-2xl font-bold text-white">{stats.total}</p>
+            <p className="text-slate-400 text-xs">Tổng leads</p>
+          </Card>
+          <Card className="text-center py-4">
+            <p className="text-2xl font-bold text-amber-500">{stats.thisWeek}</p>
+            <p className="text-slate-400 text-xs">Tuần này</p>
+          </Card>
+          <Card className="text-center py-4">
+            <p className="text-2xl font-bold text-green-500">{stats.today}</p>
+            <p className="text-slate-400 text-xs">Hôm nay</p>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Button variant="secondary" onClick={() => onNavigate('pipeline')} className="py-4">
+            📊 Pipeline
+          </Button>
+          <Button variant="secondary" onClick={() => onNavigate('leads-list')} className="py-4">
+            📋 Danh sách
+          </Button>
+        </div>
+
+        {/* Recent Leads */}
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-lg font-semibold text-white">🆕 Leads gần đây</h3>
+          <Button variant="ghost" size="sm" onClick={() => onNavigate('add-lead')}>
+            + Thêm
+          </Button>
+        </div>
+
+        {recentLeads.length === 0 ? (
+          <Card className="text-center py-8">
+            <div className="text-4xl mb-2">👤</div>
+            <p className="text-slate-400">Chưa có lead nào</p>
+            <Button onClick={() => onNavigate('add-lead')} className="mt-4">
+              + Thêm lead đầu tiên
+            </Button>
+          </Card>
+        ) : (
+          recentLeads.map(lead => {
+            const source = getSourceInfo(lead.source);
+            const stage = getStageInfo(lead.status);
+            return (
+              <Card key={lead.id} className="mb-3" onClick={() => onNavigate('lead-detail', lead.id)}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-white font-medium">{lead.name}</h4>
+                      <span className="text-sm">{source.icon}</span>
+                    </div>
+                    <p className="text-slate-400 text-sm">{lead.phone}</p>
+                    {lead.budget_min && (
+                      <p className="text-amber-500 text-sm">{lead.budget_min}-{lead.budget_max} tỷ</p>
+                    )}
+                  </div>
+                  <Badge color={stage.color}>{stage.name}</Badge>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+};
+
+const PipelineScreen = ({ onBack, onNavigate }) => {
+  const { user } = useAuth();
+  const [leads, setLeads] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLeads = async () => {
+      const { data } = await supabase
+        .from('crm_leads')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false });
+
+      const grouped = {};
+      DEFAULT_PIPELINE_STAGES.forEach(stage => {
+        grouped[stage.id] = [];
+      });
+      data?.forEach(lead => {
+        if (grouped[lead.status]) {
+          grouped[lead.status].push(lead);
+        } else {
+          grouped['lead'] = grouped['lead'] || [];
+          grouped['lead'].push(lead);
+        }
+      });
+      setLeads(grouped);
+      setLoading(false);
+    };
+    fetchLeads();
+  }, [user]);
+
+  const moveLeadToStage = async (leadId, newStage) => {
+    await supabase
+      .from('crm_leads')
+      .update({ status: newStage })
+      .eq('id', leadId);
+
+    // Refresh
+    const updatedLeads = { ...leads };
+    let movedLead = null;
+
+    for (const stage in updatedLeads) {
+      const idx = updatedLeads[stage].findIndex(l => l.id === leadId);
+      if (idx !== -1) {
+        movedLead = updatedLeads[stage].splice(idx, 1)[0];
+        break;
+      }
+    }
+
+    if (movedLead) {
+      movedLead.status = newStage;
+      updatedLeads[newStage] = updatedLeads[newStage] || [];
+      updatedLeads[newStage].unshift(movedLead);
+      setLeads(updatedLeads);
+    }
+  };
+
+  const getSourceInfo = (source) => LEAD_SOURCES.find(s => s.id === source) || LEAD_SOURCES[5];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900">
+      <Header title="📊 Pipeline" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        <p className="text-slate-400 text-sm mb-4">← Vuốt để xem các cột →</p>
+      </div>
+      <div className="overflow-x-auto pb-20">
+        <div className="flex gap-3 px-4" style={{ minWidth: 'max-content' }}>
+          {DEFAULT_PIPELINE_STAGES.map(stage => (
+            <div key={stage.id} className="w-64 flex-shrink-0">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: stage.color }} />
+                <span className="text-white font-medium">{stage.name}</span>
+                <span className="text-slate-500 text-sm">({leads[stage.id]?.length || 0})</span>
+              </div>
+              <div className="space-y-2 min-h-[200px] bg-slate-800/50 rounded-xl p-2">
+                {leads[stage.id]?.map(lead => {
+                  const source = getSourceInfo(lead.source);
+                  return (
+                    <Card
+                      key={lead.id}
+                      className="cursor-pointer"
+                      onClick={() => onNavigate('lead-detail', lead.id)}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-white font-medium text-sm">{lead.name}</p>
+                          <p className="text-slate-400 text-xs">{lead.phone}</p>
+                        </div>
+                        <span>{source.icon}</span>
+                      </div>
+                      {/* Quick move buttons */}
+                      <div className="flex gap-1 mt-2 overflow-x-auto">
+                        {DEFAULT_PIPELINE_STAGES.filter(s => s.id !== stage.id).slice(0, 3).map(s => (
+                          <button
+                            key={s.id}
+                            onClick={(e) => { e.stopPropagation(); moveLeadToStage(lead.id, s.id); }}
+                            className="px-2 py-1 text-xs rounded bg-slate-700 text-slate-300 whitespace-nowrap"
+                          >
+                            → {s.name}
+                          </button>
+                        ))}
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LeadsListScreen = ({ onBack, onNavigate }) => {
+  const { user } = useAuth();
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterSource, setFilterSource] = useState('all');
+
+  useEffect(() => {
+    const fetchLeads = async () => {
+      const { data } = await supabase
+        .from('crm_leads')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+      setLeads(data || []);
+      setLoading(false);
+    };
+    fetchLeads();
+  }, [user]);
+
+  const filteredLeads = leads.filter(l => {
+    const matchesSearch = l.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         l.phone?.includes(searchQuery);
+    const matchesFilter = filterSource === 'all' || l.source === filterSource;
+    return matchesSearch && matchesFilter;
+  });
+
+  const getSourceInfo = (source) => LEAD_SOURCES.find(s => s.id === source) || LEAD_SOURCES[5];
+  const getStageInfo = (status) => DEFAULT_PIPELINE_STAGES.find(s => s.id === status) || DEFAULT_PIPELINE_STAGES[0];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="📋 Danh sách leads" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        <Button onClick={() => onNavigate('add-lead')} className="w-full mb-4">
+          + Thêm lead mới
+        </Button>
+
+        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Tìm theo tên, SĐT..." />
+
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
+          <button
+            onClick={() => setFilterSource('all')}
+            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${filterSource === 'all' ? 'bg-amber-500 text-white' : 'bg-slate-800 text-slate-400'}`}
+          >
+            Tất cả
+          </button>
+          {LEAD_SOURCES.map(s => (
+            <button
+              key={s.id}
+              onClick={() => setFilterSource(s.id)}
+              className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${filterSource === s.id ? 'bg-amber-500 text-white' : 'bg-slate-800 text-slate-400'}`}
+            >
+              {s.icon} {s.name}
+            </button>
+          ))}
+        </div>
+
+        {filteredLeads.length === 0 ? (
+          <EmptyState icon="👤" title="Không có lead" description="Thêm lead mới hoặc thay đổi bộ lọc" />
+        ) : (
+          filteredLeads.map(lead => {
+            const source = getSourceInfo(lead.source);
+            const stage = getStageInfo(lead.status);
+            return (
+              <Card key={lead.id} className="mb-3" onClick={() => onNavigate('lead-detail', lead.id)}>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-white font-medium">{lead.name}</h4>
+                      <span>{source.icon}</span>
+                    </div>
+                    <p className="text-slate-400 text-sm">📞 {lead.phone}</p>
+                    {lead.budget_min && (
+                      <p className="text-amber-500 text-sm">💰 {lead.budget_min}-{lead.budget_max} tỷ</p>
+                    )}
+                    {lead.property_types_interest?.length > 0 && (
+                      <p className="text-slate-500 text-xs mt-1">
+                        {lead.property_types_interest.map(t => PROPERTY_TYPES.find(pt => pt.value === t)?.label).join(', ')}
+                      </p>
+                    )}
+                  </div>
+                  <Badge color={stage.color}>{stage.name}</Badge>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+};
+
+const AddLeadScreen = ({ onBack }) => {
+  const { user } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    source: 'facebook',
+    source_detail: '',
+    budget_min: '',
+    budget_max: '',
+    property_types_interest: [],
+    areas_interest: [],
+    notes: '',
+  });
+
+  const togglePropertyType = (type) => {
+    const types = formData.property_types_interest || [];
+    if (types.includes(type)) {
+      setFormData({ ...formData, property_types_interest: types.filter(t => t !== type) });
+    } else {
+      setFormData({ ...formData, property_types_interest: [...types, type] });
+    }
+  };
+
+  const handleSave = async () => {
+    if (!formData.name || !formData.phone) {
+      setToast({ message: 'Vui lòng điền họ tên và SĐT', type: 'error' });
+      return;
+    }
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('crm_leads').insert({
+        user_id: user.id,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || null,
+        source: formData.source,
+        source_detail: formData.source_detail || null,
+        budget_min: formData.budget_min ? parseFloat(formData.budget_min) : null,
+        budget_max: formData.budget_max ? parseFloat(formData.budget_max) : null,
+        property_types_interest: formData.property_types_interest,
+        areas_interest: formData.areas_interest,
+        notes: formData.notes || null,
+        status: 'lead',
+      });
+      if (error) throw error;
+      setToast({ message: 'Thêm lead thành công!', type: 'success' });
+      setTimeout(onBack, 1500);
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="➕ Thêm lead" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        {/* Contact */}
+        <h3 className="text-lg font-semibold text-white mb-3">👤 Thông tin liên hệ</h3>
+        <Input
+          label="Họ tên"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="Nguyễn Văn A"
+          required
+        />
+        <Input
+          label="Số điện thoại"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          placeholder="0909..."
+          required
+        />
+        <Input
+          label="Email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          placeholder="email@example.com"
+        />
+
+        {/* Source */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">📍 Nguồn khách hàng</h3>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {LEAD_SOURCES.map(s => (
+            <button
+              key={s.id}
+              onClick={() => setFormData({ ...formData, source: s.id })}
+              className={`px-3 py-2 rounded-xl text-sm ${
+                formData.source === s.id ? 'bg-amber-500 text-white' : 'bg-slate-800 text-slate-300'
+              }`}
+            >
+              {s.icon} {s.name}
+            </button>
+          ))}
+        </div>
+        <Input
+          label="Chi tiết nguồn"
+          value={formData.source_detail}
+          onChange={(e) => setFormData({ ...formData, source_detail: e.target.value })}
+          placeholder="Link post, chiến dịch..."
+        />
+
+        {/* Budget */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">💰 Ngân sách</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Từ (tỷ)"
+            type="number"
+            value={formData.budget_min}
+            onChange={(e) => setFormData({ ...formData, budget_min: e.target.value })}
+            placeholder="2"
+          />
+          <Input
+            label="Đến (tỷ)"
+            type="number"
+            value={formData.budget_max}
+            onChange={(e) => setFormData({ ...formData, budget_max: e.target.value })}
+            placeholder="5"
+          />
+        </div>
+
+        {/* Interest */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">🏠 Quan tâm loại BĐS</h3>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {PROPERTY_TYPES.map(t => (
+            <button
+              key={t.value}
+              onClick={() => togglePropertyType(t.value)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                formData.property_types_interest?.includes(t.value)
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-slate-800 text-slate-300'
+              }`}
+            >
+              {t.icon} {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Notes */}
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">📝 Ghi chú</h3>
+        <Textarea
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          placeholder="Ghi chú về khách..."
+          rows={3}
+        />
+
+        <Button onClick={handleSave} loading={saving} className="w-full mt-6">
+          💾 Lưu lead
+        </Button>
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+const LeadDetailScreen = ({ leadId, onBack, onNavigate }) => {
+  const [lead, setLead] = useState(null);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: leadData } = await supabase
+        .from('crm_leads')
+        .select('*')
+        .eq('id', leadId)
+        .single();
+      setLead(leadData);
+
+      const { data: activitiesData } = await supabase
+        .from('crm_activities')
+        .select('*')
+        .eq('lead_id', leadId)
+        .order('created_at', { ascending: false });
+      setActivities(activitiesData || []);
+      setLoading(false);
+    };
+    fetchData();
+  }, [leadId]);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    await supabase.from('crm_leads').delete().eq('id', leadId);
+    onBack();
+  };
+
+  const updateStatus = async (newStatus) => {
+    await supabase
+      .from('crm_leads')
+      .update({ status: newStatus })
+      .eq('id', leadId);
+    setLead({ ...lead, status: newStatus });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!lead) {
+    return (
+      <div className="min-h-screen bg-slate-900 p-4">
+        <EmptyState icon="❌" title="Không tìm thấy" description="Lead không tồn tại" action={<Button onClick={onBack}>Quay lại</Button>} />
+      </div>
+    );
+  }
+
+  const source = LEAD_SOURCES.find(s => s.id === lead.source) || LEAD_SOURCES[5];
+  const stage = DEFAULT_PIPELINE_STAGES.find(s => s.id === lead.status) || DEFAULT_PIPELINE_STAGES[0];
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <div className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+        <div className="flex items-center justify-between px-4 py-3">
+          <button onClick={onBack} className="text-slate-400 hover:text-white text-xl">←</button>
+          <Button variant="ghost" size="sm" onClick={() => setShowDeleteModal(true)}>🗑️</Button>
+        </div>
+      </div>
 
       <div className="p-4">
-        <Card className="text-center py-12">
-          <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-lg font-semibold text-white mb-2">Tính năng đang xây dựng</h3>
-          <p className="text-slate-400">
-            Quản lý khách hàng (CRM) sẽ có ở Phase 5
-          </p>
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="w-20 h-20 mx-auto bg-slate-700 rounded-full flex items-center justify-center text-3xl mb-3">
+            👤
+          </div>
+          <h1 className="text-2xl font-bold text-white">{lead.name}</h1>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <span>{source.icon}</span>
+            <span className="text-slate-400">{source.name}</span>
+          </div>
+        </div>
+
+        {/* Contact Actions */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <Button variant="secondary" onClick={() => window.open(`tel:${lead.phone}`)}>📞 Gọi</Button>
+          <Button variant="secondary" onClick={() => window.open(`https://zalo.me/${lead.phone}`)}>💬 Zalo</Button>
+          <Button variant="secondary" onClick={() => lead.email && window.open(`mailto:${lead.email}`)}>✉️ Email</Button>
+        </div>
+
+        {/* Info */}
+        <Card className="mb-4">
+          <h3 className="text-white font-semibold mb-3">📋 Thông tin</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-slate-400">SĐT</span>
+              <span className="text-white">{lead.phone}</span>
+            </div>
+            {lead.email && (
+              <div className="flex justify-between">
+                <span className="text-slate-400">Email</span>
+                <span className="text-white">{lead.email}</span>
+              </div>
+            )}
+            {lead.budget_min && (
+              <div className="flex justify-between">
+                <span className="text-slate-400">Ngân sách</span>
+                <span className="text-amber-500">{lead.budget_min}-{lead.budget_max} tỷ</span>
+              </div>
+            )}
+            {lead.property_types_interest?.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-slate-400">Quan tâm</span>
+                <span className="text-white">
+                  {lead.property_types_interest.map(t => PROPERTY_TYPES.find(pt => pt.value === t)?.label).join(', ')}
+                </span>
+              </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Status */}
+        <Card className="mb-4">
+          <h3 className="text-white font-semibold mb-3">🏷️ Trạng thái</h3>
+          <div className="flex flex-wrap gap-2">
+            {DEFAULT_PIPELINE_STAGES.map(s => (
+              <button
+                key={s.id}
+                onClick={() => updateStatus(s.id)}
+                className={`px-3 py-1.5 rounded-full text-sm ${
+                  lead.status === s.id
+                    ? 'text-white'
+                    : 'bg-slate-700 text-slate-400'
+                }`}
+                style={lead.status === s.id ? { backgroundColor: s.color } : {}}
+              >
+                {s.name}
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        {/* Notes */}
+        {lead.notes && (
+          <Card className="mb-4">
+            <h3 className="text-white font-semibold mb-2">📝 Ghi chú</h3>
+            <p className="text-slate-300 text-sm">{lead.notes}</p>
+          </Card>
+        )}
+
+        {/* Activities */}
+        <Card>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-white font-semibold">📅 Hoạt động</h3>
+            <Button variant="ghost" size="sm" onClick={() => onNavigate('add-activity', leadId)}>
+              + Thêm
+            </Button>
+          </div>
+          {activities.length === 0 ? (
+            <p className="text-slate-400 text-sm text-center py-4">Chưa có hoạt động</p>
+          ) : (
+            <div className="space-y-3">
+              {activities.map(a => {
+                const type = ACTIVITY_TYPES.find(t => t.id === a.activity_type) || ACTIVITY_TYPES[3];
+                return (
+                  <div key={a.id} className="flex gap-3 pb-3 border-b border-slate-700 last:border-0">
+                    <div className="text-xl">{type.icon}</div>
+                    <div className="flex-1">
+                      <p className="text-white text-sm">{a.description}</p>
+                      <p className="text-slate-500 text-xs mt-1">
+                        {new Date(a.created_at).toLocaleDateString('vi-VN')}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </Card>
       </div>
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Xóa lead?"
+        message="Bạn có chắc muốn xóa lead này?"
+        loading={deleting}
+      />
+    </div>
+  );
+};
+
+const AddActivityScreen = ({ leadId, onBack }) => {
+  const { user } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [formData, setFormData] = useState({
+    activity_type: 'call',
+    description: '',
+    scheduled_at: '',
+  });
+
+  const handleSave = async () => {
+    if (!formData.description) {
+      setToast({ message: 'Vui lòng nhập nội dung', type: 'error' });
+      return;
+    }
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('crm_activities').insert({
+        user_id: user.id,
+        lead_id: leadId,
+        activity_type: formData.activity_type,
+        description: formData.description,
+        scheduled_at: formData.scheduled_at || null,
+      });
+      if (error) throw error;
+      setToast({ message: 'Đã thêm hoạt động!', type: 'success' });
+      setTimeout(onBack, 1500);
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="➕ Thêm hoạt động" onBack={onBack} showProfile={false} />
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-white mb-3">📋 Loại hoạt động</h3>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {ACTIVITY_TYPES.map(t => (
+            <Card
+              key={t.id}
+              className={`text-center py-4 ${formData.activity_type === t.id ? 'border-amber-500' : ''}`}
+              onClick={() => setFormData({ ...formData, activity_type: t.id })}
+            >
+              <div className="text-2xl mb-1">{t.icon}</div>
+              <p className="text-white text-sm">{t.name}</p>
+            </Card>
+          ))}
+        </div>
+
+        <h3 className="text-lg font-semibold text-white mb-3">📝 Nội dung</h3>
+        <Textarea
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          placeholder="Mô tả hoạt động..."
+          rows={4}
+        />
+
+        <h3 className="text-lg font-semibold text-white mb-3 mt-6">⏰ Nhắc nhở (tùy chọn)</h3>
+        <Input
+          type="datetime-local"
+          value={formData.scheduled_at}
+          onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
+        />
+
+        <Button onClick={handleSave} loading={saving} className="w-full mt-6">
+          💾 Lưu hoạt động
+        </Button>
+      </div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 };
@@ -1918,48 +3702,81 @@ const AppContent = () => {
     }
   }
 
-  // Main app
+  // Main app - render screens
   const renderScreen = () => {
-    // Handle property-related screens
+    // Property screens
     if (screen.name === 'property-detail') {
-      return (
-        <PropertyDetailScreen
-          propertyId={screen.params}
-          onNavigate={navigate}
-          onBack={goBack}
-        />
-      );
+      return <PropertyDetailScreen propertyId={screen.params} onNavigate={navigate} onBack={goBack} />;
     }
-
     if (screen.name === 'add-property') {
       return <PropertyFormScreen onBack={goBack} />;
     }
-
     if (screen.name === 'edit-property') {
       return <PropertyFormScreen propertyId={screen.params} onBack={goBack} />;
+    }
+
+    // Phase 2: Landing Page screens
+    if (screen.name === 'landing-pages') {
+      return <LandingPagesListScreen onNavigate={navigate} onBack={goBack} />;
+    }
+    if (screen.name === 'create-landing-page') {
+      return <CreateLandingPageScreen onBack={goBack} onNavigate={navigate} />;
+    }
+
+    // Phase 3: Content screens
+    if (screen.name === 'create-content') {
+      return <CreateContentScreen onBack={goBack} params={screen.params} />;
+    }
+
+    // Phase 4: Agent Profile screens
+    if (screen.name === 'profile-settings') {
+      return <ProfileSettingsScreen onBack={goBack} />;
+    }
+    if (screen.name === 'agent-page-builder') {
+      return <AgentPageBuilderScreen onBack={goBack} />;
+    }
+
+    // Phase 5: CRM screens
+    if (screen.name === 'pipeline') {
+      return <PipelineScreen onBack={goBack} onNavigate={navigate} />;
+    }
+    if (screen.name === 'leads-list') {
+      return <LeadsListScreen onBack={goBack} onNavigate={navigate} />;
+    }
+    if (screen.name === 'add-lead') {
+      return <AddLeadScreen onBack={goBack} />;
+    }
+    if (screen.name === 'lead-detail') {
+      return <LeadDetailScreen leadId={screen.params} onBack={goBack} onNavigate={navigate} />;
+    }
+    if (screen.name === 'add-activity') {
+      return <AddActivityScreen leadId={screen.params} onBack={goBack} />;
     }
 
     // Tab screens
     switch (activeTab) {
       case 'home':
-        return <HomeScreen />;
+        return <HomeScreen onNavigate={navigate} />;
       case 'properties':
         return <PropertiesScreen onNavigate={navigate} />;
       case 'create':
-        return <CreateScreen />;
+        return <CreateScreen onNavigate={navigate} />;
       case 'content':
-        return <ContentScreen />;
+        return <ContentScreen onNavigate={navigate} />;
       case 'crm':
-        return <CRMScreen />;
+        return <CRMScreen onNavigate={navigate} />;
       default:
         return <PropertiesScreen onNavigate={navigate} />;
     }
   };
 
+  // Check if we should show bottom nav
+  const showBottomNav = screen.name === 'list';
+
   return (
     <div className="min-h-screen bg-slate-900">
       {renderScreen()}
-      {screen.name === 'list' && (
+      {showBottomNav && (
         <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       )}
     </div>
