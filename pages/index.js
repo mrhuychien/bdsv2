@@ -3885,24 +3885,16 @@ export default function Home() {
         <meta name="description" content="PostNhà - Nền tảng quản lý bất động sản toàn diện cho môi giới. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#0F172A" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="mobile-web-app-capable" content="yes" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://batdongsan.digital/" />
         <meta property="og:title" content="PostNhà - Nền tảng BĐS cho Môi giới" />
         <meta property="og:description" content="Nền tảng quản lý bất động sản toàn diện. Kho hàng BĐS, Landing Page, Content Marketing, CRM." />
-        <meta property="og:image" content="https://batdongsan.digital/og-image.png" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PostNhà - Nền tảng BĐS cho Môi giới" />
-        <meta name="twitter:description" content="Nền tảng quản lý bất động sản toàn diện cho môi giới chuyên nghiệp." />
 
         {/* Favicon */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </Head>
       <AuthProvider>
         <div className="font-sans antialiased">
