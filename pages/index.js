@@ -179,66 +179,42 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   const fetchProfile = async (userId) => {
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
-
-      if (!error && data) {
-        setProfile(data);
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+      if (data) setProfile(data);
+    } catch (e) {
+      console.error('Profile error:', e);
     }
   };
 
   useEffect(() => {
-    if (initialized) return;
+    // Force stop loading after 2s no matter what
+    const timeout = setTimeout(() => setLoading(false), 2000);
 
-    const init = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
         setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        }
-      } catch (error) {
-        console.error('Auth init error:', error);
-      } finally {
+        if (session?.user) fetchProfile(session.user.id);
         setLoading(false);
-        setInitialized(true);
-      }
+      })
+      .catch(() => setLoading(false));
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) fetchProfile(session.user.id);
+      else setProfile(null);
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
     };
-
-    // Timeout backup
-    const timeout = setTimeout(() => {
-      setLoading(false);
-      setInitialized(true);
-    }, 3000);
-
-    init();
-
-    return () => clearTimeout(timeout);
-  }, [initialized]);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (email, password, fullName) => {
