@@ -2424,6 +2424,7 @@ const ContentScreen = ({ onNavigate }) => {
   const { user } = useAuth();
   const [properties, setProperties] = useState([]);
   const [scheduledCount, setScheduledCount] = useState(0);
+  const [connectedCount, setConnectedCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -2438,12 +2439,20 @@ const ContentScreen = ({ onNavigate }) => {
       setProperties(props || []);
 
       // Fetch scheduled posts count
-      const { count } = await supabase
+      const { count: schedCount } = await supabase
         .from('scheduled_posts')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id)
         .eq('status', 'scheduled');
-      setScheduledCount(count || 0);
+      setScheduledCount(schedCount || 0);
+
+      // Fetch connected accounts count
+      const { count: accCount } = await supabase
+        .from('social_accounts')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+      setConnectedCount(accCount || 0);
 
       setLoading(false);
     };
@@ -2494,16 +2503,29 @@ const ContentScreen = ({ onNavigate }) => {
           ))}
         </div>
 
-        {/* View Scheduled Button */}
-        <Card
-          className="mb-6 text-center py-3"
-          onClick={() => onNavigate('scheduled-posts')}
-        >
-          <div className="flex items-center justify-center gap-2 text-slate-300">
-            <span>📅</span>
-            <span>Xem lịch đăng bài</span>
-          </div>
-        </Card>
+        {/* Quick Links */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <Card
+            className="text-center py-3"
+            onClick={() => onNavigate('scheduled-posts')}
+          >
+            <div className="flex items-center justify-center gap-2 text-slate-300">
+              <span>📅</span>
+              <span className="text-sm">Lịch đăng bài</span>
+            </div>
+          </Card>
+          <Card
+            className={`text-center py-3 ${connectedCount === 0 ? 'border-amber-500/50' : ''}`}
+            onClick={() => onNavigate('social-accounts')}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <span>🔗</span>
+              <span className={`text-sm ${connectedCount === 0 ? 'text-amber-400' : 'text-slate-300'}`}>
+                {connectedCount === 0 ? 'Kết nối MXH' : `${connectedCount} tài khoản`}
+              </span>
+            </div>
+          </Card>
+        </div>
 
         {/* Recent Properties */}
         <h3 className="text-lg font-semibold text-white mb-3">BĐS có thể tạo content</h3>
@@ -2538,7 +2560,7 @@ const ContentScreen = ({ onNavigate }) => {
   );
 };
 
-const CreateContentScreen = ({ onBack, params }) => {
+const CreateContentScreen = ({ onBack, params, onNavigate }) => {
   const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [platform, setPlatform] = useState(params?.platform || 'facebook');
@@ -2553,6 +2575,7 @@ const CreateContentScreen = ({ onBack, params }) => {
   const [selectedPlatforms, setSelectedPlatforms] = useState(null);
   const [scheduleTime, setScheduleTime] = useState('');
   const [scheduling, setScheduling] = useState(false);
+  const [connectedAccounts, setConnectedAccounts] = useState([]);
 
   // Initialize schedule time to next golden hour
   useEffect(() => {
@@ -2570,11 +2593,42 @@ const CreateContentScreen = ({ onBack, params }) => {
     }
   }, [platform, selectedPlatforms]);
 
+  // Fetch connected social accounts
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      const { data } = await supabase
+        .from('social_accounts')
+        .select('platform')
+        .eq('user_id', user.id)
+        .eq('is_active', true);
+      setConnectedAccounts((data || []).map(a => a.platform));
+    };
+    fetchAccounts();
+  }, [user]);
+
+  const getConnectedPlatforms = () => {
+    return (selectedPlatforms || [platform]).filter(p => connectedAccounts.includes(p));
+  };
+
+  const getUnconnectedPlatforms = () => {
+    return (selectedPlatforms || [platform]).filter(p => !connectedAccounts.includes(p));
+  };
+
   const handleSchedulePost = async () => {
     if (!generatedContent || !scheduleTime || (selectedPlatforms || []).length === 0) {
       setToast({ message: 'Vui lòng chọn nền tảng và thời gian', type: 'error' });
       return;
     }
+
+    const unconnected = getUnconnectedPlatforms();
+    if (unconnected.length > 0) {
+      const platformNames = unconnected.map(p => PLATFORMS.find(x => x.id === p)?.name).join(', ');
+      setToast({
+        message: `Chưa kết nối: ${platformNames}. Bài viết sẽ được lưu và đăng khi bạn kết nối tài khoản.`,
+        type: 'info'
+      });
+    }
+
     setScheduling(true);
     try {
       const { error } = await supabase.from('scheduled_posts').insert({
@@ -2584,11 +2638,16 @@ const CreateContentScreen = ({ onBack, params }) => {
         media_urls: selectedProperty?.images || [],
         platforms: selectedPlatforms || [platform],
         scheduled_at: new Date(scheduleTime).toISOString(),
-        status: 'scheduled',
+        status: connectedAccounts.length > 0 ? 'scheduled' : 'draft',
       });
       if (error) throw error;
-      setToast({ message: 'Đã lên lịch đăng bài thành công!', type: 'success' });
-      setTimeout(() => onBack(), 1500);
+      setToast({
+        message: connectedAccounts.length > 0
+          ? 'Đã lên lịch đăng bài thành công! Xem tại mục Lịch đăng bài.'
+          : 'Đã lưu bài viết. Kết nối tài khoản MXH để tự động đăng.',
+        type: 'success'
+      });
+      setTimeout(() => onBack(), 2000);
     } catch (error) {
       console.error('Schedule error:', error);
       setToast({ message: 'Có lỗi xảy ra khi lên lịch', type: 'error' });
@@ -2780,28 +2839,61 @@ const CreateContentScreen = ({ onBack, params }) => {
             <Card className="mb-4">
               <h3 className="text-white font-semibold mb-3">📅 Lên lịch đăng bài</h3>
 
+              {/* Connection Status Banner */}
+              {connectedAccounts.length === 0 ? (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 mb-4">
+                  <p className="text-amber-400 text-sm mb-2">
+                    ⚠️ Chưa kết nối tài khoản mạng xã hội
+                  </p>
+                  <p className="text-slate-400 text-xs mb-2">
+                    Bài viết sẽ được lưu nháp. Kết nối tài khoản để tự động đăng bài.
+                  </p>
+                  <button
+                    onClick={() => onNavigate('social-accounts')}
+                    className="text-amber-400 text-sm underline"
+                  >
+                    → Kết nối ngay
+                  </button>
+                </div>
+              ) : (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-4">
+                  <p className="text-green-400 text-sm">
+                    ✓ Đã kết nối {connectedAccounts.length} tài khoản
+                  </p>
+                </div>
+              )}
+
               <p className="text-slate-400 text-sm mb-3">Chọn nền tảng muốn đăng:</p>
               <div className="flex flex-wrap gap-2 mb-4">
-                {PLATFORMS.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => {
-                      const current = selectedPlatforms || [platform];
-                      if (current.includes(p.id)) {
-                        setSelectedPlatforms(current.filter(x => x !== p.id));
-                      } else {
-                        setSelectedPlatforms([...current, p.id]);
-                      }
-                    }}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition ${
-                      (selectedPlatforms || [platform]).includes(p.id)
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-slate-700 text-slate-300'
-                    }`}
-                  >
-                    {p.icon} {p.name}
-                  </button>
-                ))}
+                {PLATFORMS.map(p => {
+                  const isConnected = connectedAccounts.includes(p.id);
+                  const isSelected = (selectedPlatforms || [platform]).includes(p.id);
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        const current = selectedPlatforms || [platform];
+                        if (current.includes(p.id)) {
+                          setSelectedPlatforms(current.filter(x => x !== p.id));
+                        } else {
+                          setSelectedPlatforms([...current, p.id]);
+                        }
+                      }}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition relative ${
+                        isSelected
+                          ? 'bg-amber-500 text-white'
+                          : 'bg-slate-700 text-slate-300'
+                      }`}
+                    >
+                      {p.icon} {p.name}
+                      {isConnected ? (
+                        <span className="text-green-400 text-xs">✓</span>
+                      ) : (
+                        <span className="text-slate-500 text-xs">○</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
 
               <p className="text-slate-400 text-sm mb-2">Thời gian đăng:</p>
@@ -2813,6 +2905,7 @@ const CreateContentScreen = ({ onBack, params }) => {
                 className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white mb-3"
               />
 
+              <p className="text-slate-400 text-xs mb-2">⏰ Giờ vàng đăng bài:</p>
               <div className="flex flex-wrap gap-2 mb-4">
                 {GOLDEN_HOURS.map(h => {
                   const today = new Date();
@@ -2834,8 +2927,15 @@ const CreateContentScreen = ({ onBack, params }) => {
             </Card>
 
             <Button onClick={handleSchedulePost} loading={scheduling} className="w-full mb-3">
-              📅 Lên lịch đăng bài
+              {connectedAccounts.length > 0 ? '📅 Lên lịch đăng bài' : '💾 Lưu nháp'}
             </Button>
+
+            <button
+              onClick={() => onNavigate('scheduled-posts')}
+              className="w-full text-center text-slate-400 text-sm mb-3 hover:text-white transition"
+            >
+              📋 Xem lịch đăng bài →
+            </button>
 
             <Button variant="ghost" onClick={() => setStep(1)} className="w-full">
               ← Tạo content khác
@@ -3055,6 +3155,235 @@ const ScheduledPostsScreen = ({ onBack, onNavigate }) => {
             ))}
           </div>
         )}
+      </div>
+
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//                         SOCIAL ACCOUNTS SCREEN
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const SOCIAL_PLATFORMS = [
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    icon: '📘',
+    color: '#1877F2',
+    description: 'Đăng bài lên Facebook Page hoặc Profile',
+    authUrl: 'https://www.facebook.com/v18.0/dialog/oauth',
+  },
+  {
+    id: 'zalo',
+    name: 'Zalo OA',
+    icon: '💬',
+    color: '#0068FF',
+    description: 'Đăng bài lên Zalo Official Account',
+    authUrl: 'https://oauth.zaloapp.com/v4/oa/permission',
+  },
+  {
+    id: 'tiktok',
+    name: 'TikTok',
+    icon: '🎵',
+    color: '#000000',
+    description: 'Đăng video lên TikTok',
+    authUrl: 'https://www.tiktok.com/auth/authorize/',
+  },
+];
+
+const SocialAccountsScreen = ({ onBack }) => {
+  const { user } = useAuth();
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [connecting, setConnecting] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  const fetchAccounts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('social_accounts')
+        .select('*')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      setAccounts(data || []);
+    } catch (error) {
+      console.error('Error fetching accounts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAccounts();
+  }, [user]);
+
+  const handleConnect = async (platform) => {
+    setConnecting(platform.id);
+
+    // In production, this would redirect to OAuth flow
+    // For demo, we simulate a successful connection
+    setToast({
+      message: `Tính năng kết nối ${platform.name} đang được phát triển. Vui lòng liên hệ admin để được hỗ trợ.`,
+      type: 'info'
+    });
+
+    // Simulate adding account for demo purposes
+    setTimeout(async () => {
+      try {
+        const { error } = await supabase.from('social_accounts').insert({
+          user_id: user.id,
+          platform: platform.id,
+          platform_user_id: `demo_${Date.now()}`,
+          platform_username: `Demo ${platform.name} Account`,
+          access_token: 'demo_token',
+          token_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          is_active: true,
+        });
+        if (!error) {
+          await fetchAccounts();
+          setToast({ message: `Đã kết nối ${platform.name} (Demo)`, type: 'success' });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      setConnecting(null);
+    }, 1500);
+  };
+
+  const handleDisconnect = async (accountId, platformName) => {
+    if (!confirm(`Bạn có chắc muốn ngắt kết nối ${platformName}?`)) return;
+
+    try {
+      const { error } = await supabase
+        .from('social_accounts')
+        .delete()
+        .eq('id', accountId);
+      if (error) throw error;
+      setAccounts(accounts.filter(a => a.id !== accountId));
+      setToast({ message: `Đã ngắt kết nối ${platformName}`, type: 'success' });
+    } catch (error) {
+      setToast({ message: 'Có lỗi xảy ra', type: 'error' });
+    }
+  };
+
+  const getConnectedAccount = (platformId) => {
+    return accounts.find(a => a.platform === platformId && a.is_active);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
+      <Header title="🔗 Kết nối mạng xã hội" onBack={onBack} showProfile={false} />
+
+      <div className="p-4">
+        {/* Info Banner */}
+        <Card className="mb-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500/30">
+          <div className="flex gap-3">
+            <div className="text-2xl">ℹ️</div>
+            <div>
+              <p className="text-white font-medium mb-1">Kết nối để tự động đăng bài</p>
+              <p className="text-slate-400 text-sm">
+                Kết nối tài khoản mạng xã hội để hệ thống tự động đăng bài theo lịch đã lên.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Connected accounts count */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-white">Nền tảng</h3>
+          <span className="text-slate-400 text-sm">
+            {accounts.filter(a => a.is_active).length}/{SOCIAL_PLATFORMS.length} đã kết nối
+          </span>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <LoadingSpinner size="lg" />
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {SOCIAL_PLATFORMS.map(platform => {
+              const connected = getConnectedAccount(platform.id);
+              const isConnecting = connecting === platform.id;
+
+              return (
+                <Card key={platform.id} className="p-4">
+                  <div className="flex items-start gap-4">
+                    {/* Platform Icon */}
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                      style={{ backgroundColor: `${platform.color}20` }}
+                    >
+                      {platform.icon}
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="text-white font-medium">{platform.name}</h4>
+                        {connected && (
+                          <span className="bg-green-500/20 text-green-400 px-2 py-0.5 rounded text-xs">
+                            Đã kết nối
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-slate-400 text-sm mb-2">{platform.description}</p>
+
+                      {connected ? (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-300 text-sm">
+                            {connected.platform_username}
+                          </span>
+                          <button
+                            onClick={() => handleDisconnect(connected.id, platform.name)}
+                            className="text-red-400 text-sm hover:underline"
+                          >
+                            Ngắt kết nối
+                          </button>
+                        </div>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => handleConnect(platform)}
+                          loading={isConnecting}
+                          className="mt-1"
+                        >
+                          Kết nối {platform.name}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Help Section */}
+        <Card className="mt-6 bg-slate-800/50">
+          <h4 className="text-white font-medium mb-2">❓ Cần hỗ trợ?</h4>
+          <p className="text-slate-400 text-sm mb-3">
+            Nếu gặp vấn đề khi kết nối tài khoản, vui lòng liên hệ:
+          </p>
+          <div className="flex gap-2">
+            <a
+              href="https://zalo.me/0123456789"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-500/20 text-blue-400 px-3 py-1 rounded text-sm"
+            >
+              💬 Zalo hỗ trợ
+            </a>
+            <a
+              href="mailto:support@batdongsan.digital"
+              className="bg-slate-700 text-slate-300 px-3 py-1 rounded text-sm"
+            >
+              ✉️ Email
+            </a>
+          </div>
+        </Card>
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
@@ -4209,10 +4538,13 @@ const AppContent = () => {
 
     // Phase 3: Content screens
     if (screen.name === 'create-content') {
-      return <CreateContentScreen onBack={goBack} params={screen.params} />;
+      return <CreateContentScreen onBack={goBack} params={screen.params} onNavigate={navigate} />;
     }
     if (screen.name === 'scheduled-posts') {
       return <ScheduledPostsScreen onBack={goBack} onNavigate={navigate} />;
+    }
+    if (screen.name === 'social-accounts') {
+      return <SocialAccountsScreen onBack={goBack} />;
     }
 
     // Phase 4: Agent Profile screens
